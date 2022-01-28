@@ -98,6 +98,30 @@ namespace SQLiteAbstractCrud
             return entity;
         }
 
+        public virtual List<T> GetByDateRange(string fieldName, object minInclude, object maxInclude)
+        {
+            T entity = default;
+
+            _con.Open();
+            var fieldsNames = _fields.Itens.Select(x => x.Name).ToList();
+            var cmd = new SQLiteCommand(GetQueryDateRange(fieldsNames, fieldName, minInclude, maxInclude), _con);
+
+            var entities = new List<T>();
+
+            using (var rdr = cmd.ExecuteReader())
+            {
+                while (rdr.Read())
+                {
+                    entity = Map(rdr);
+                    entities.Add(entity);
+                }
+            }
+
+            _con.Close();
+
+            return entities;
+        }
+
         public virtual void Delete(object id)
         {
             _con.Open();
@@ -253,9 +277,16 @@ namespace SQLiteAbstractCrud
             _con.Close();
         }
 
-        private string GetQueryGet(List<string> fieldsNames, object id)
+        private string GetQueryGet(List<string> fieldsNames, object value)
         {
-            return $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {GetPrimaryKeyName()} = {GetQueryWhere(id)}";
+            return $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {GetPrimaryKeyName()} = {GetQueryWhere(value)}";
+        }
+
+        private string GetQueryDateRange(List<string> fieldsNames, string fieldName, object paramMin, object paramMax)
+        {
+            var query = $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {fieldName} > '{paramMin:yyyy-MM-dd 00:00:00.000}' AND {fieldName} < '{paramMax:yyyy-MM-dd 23:59:59.999}'";
+            
+            return query;
         }
 
         private string GetQueryWhere(object id)
