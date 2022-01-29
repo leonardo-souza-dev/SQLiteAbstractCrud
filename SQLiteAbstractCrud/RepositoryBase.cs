@@ -44,9 +44,18 @@ namespace SQLiteAbstractCrud
             return t;
         }
 
-        public virtual void Update(T t)
+        public virtual T Update(T t, string field, object value)
         {
-            throw new NotImplementedException();
+            _con.Open();
+
+            var query = GetQueryUpdate(t, field, value);
+
+            var cmd = new SQLiteCommand(query, _con);
+            cmd.ExecuteNonQuery();
+
+            _con.Close();
+
+            return t;
         }
 
         public virtual void InsertBatch(List<T> list)
@@ -82,7 +91,7 @@ namespace SQLiteAbstractCrud
             T entity = default;
 
             _con.Open();
-            var fieldsNames = _fields.Itens.Select(x => x.Name).ToList();
+            var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
             var cmd = new SQLiteCommand(GetQueryGet(fieldsNames, id), _con);
 
             using (var rdr = cmd.ExecuteReader())
@@ -103,7 +112,7 @@ namespace SQLiteAbstractCrud
             T entity = default;
 
             _con.Open();
-            var fieldsNames = _fields.Itens.Select(x => x.Name).ToList();
+            var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
             var cmd = new SQLiteCommand(GetQueryDateRange(fieldsNames, fieldName, minInclude, maxInclude), _con);
 
             var entities = new List<T>();
@@ -148,7 +157,7 @@ namespace SQLiteAbstractCrud
         {
             var queryValuesAdjust = "";
             var queryValues = "";
-            foreach (var field in fields.Itens)
+            foreach (var field in fields.Items)
             {
                 var rawValue = t.GetType().GetProperty(field.Name).GetValue(t, null);
                 object value = "";
@@ -185,7 +194,7 @@ namespace SQLiteAbstractCrud
     
             var repositoriosValue = sb.ToString().Substring(0, sb.Length - 2);
 
-            var query = $"INSERT OR REPLACE INTO {_table} ({GetFieldsCommas(_fields.Itens.Select(x => x.Name).ToList())}) VALUES {repositoriosValue};";
+            var query = $"INSERT OR REPLACE INTO {_table} ({GetFieldsCommas(_fields.Items.Select(x => x.Name).ToList())}) VALUES {repositoriosValue};";
             
             return query;
         }
@@ -198,17 +207,36 @@ namespace SQLiteAbstractCrud
         private string GetQueryInsert(string queryValuesAdjust)
         {
             var query = $"INSERT OR REPLACE INTO {_table} " +
-                        $"({GetFieldsCommas(_fields.Itens.Select(x => x.Name).ToList())}) " +
+                        $"({GetFieldsCommas(_fields.Items.Select(x => x.Name).ToList())}) " +
                         $"VALUES ({queryValuesAdjust});";
             return query;
         }
-        
+
+        private string GetQueryUpdate(T t, string fieldName, object value)
+        {
+            var set = " SET ";
+            var pkName = _fields.GetPrimaryKeyName();
+            var propertyInfo = t.GetType().GetProperty(pkName);
+            var pkValue = propertyInfo.GetValue(t, null);
+
+            foreach (var f in _fields.Items.Select(x => x.Name).Where(x => x.Equals(fieldName)))
+            {
+                set += f + " = " + value + ", ";
+            }
+            set = set.Substring(0, set.Length - 2);
+
+            var query = $"UPDATE {_table} " +
+                        $"{set} " +
+                        $"WHERE {pkName} = {_fields.GetQuotePrimaryKey()}{pkValue}{_fields.GetQuotePrimaryKey()} ;";
+            return query;
+        }
+
         private static string GetFieldsCommas(List<string> fields)
         {
             var queryFields = "";
             foreach (var field in fields)
             {
-                queryFields = queryFields + $"{field},";
+                queryFields += $"{field},";
             }
 
             var queryFieldsAdjust = queryFields.Substring(0, queryFields.Length - 1);
@@ -218,15 +246,15 @@ namespace SQLiteAbstractCrud
 
         private string GetQueryGetAll()
         {
-            var query = $"SELECT {GetFieldsCommas(_fields.Itens.Select(x => x.Name).ToList())} FROM {_table};";
+            var query = $"SELECT {GetFieldsCommas(_fields.Items.Select(x => x.Name).ToList())} FROM {_table};";
 
             return query;
         }
 
         private string GetQueryCreate()
         {
-            var fieldsQuery = _fields.Itens.Aggregate("", (current, property) => current + $"{property.Name} {property.TypeSQLite} NOT NULL,");
-            var fieldPk = _fields.Itens.Where(x => x.IsPrimaryKey).Select(x => x.Name).ToList();
+            var fieldsQuery = _fields.Items.Aggregate("", (current, property) => current + $"{property.Name} {property.TypeSQLite} NOT NULL,");
+            var fieldPk = _fields.Items.Where(x => x.IsPrimaryKey).Select(x => x.Name).ToList();
 
             if (fieldPk == null || !fieldPk.Any())
                 throw new ApplicationException("Não foi encontrada nenhuma Primary Key na entidade");
@@ -244,7 +272,7 @@ namespace SQLiteAbstractCrud
             {
                 var primaryKeyAttribute = t.GetCustomAttributes(typeof(PrimaryKeyAttribute), true);
                 
-                _fields.AdicionarCampo(t.Name, t.PropertyType.Name, primaryKeyAttribute.Any());
+                _fields.AddField(t.Name, t.PropertyType.Name, primaryKeyAttribute.Any());
             }
         }
         
@@ -302,22 +330,22 @@ namespace SQLiteAbstractCrud
 
         private T Map(IDataRecord rdr)
         {
-            var fieldsCount = _fields.Itens.Count;
+            var fieldsCount = _fields.Items.Count;
             
             var objects = new object[fieldsCount];
 
             for (int i = 0; i < fieldsCount; i++)
             {
-                switch (_fields.Itens[i].TypeSQLite)
+                switch (_fields.Items[i].TypeSQLite)
                 {
                     case "TEXT":
-                        if (_fields.Itens[i].TypeCSharp == "DateTime")
+                        if (_fields.Items[i].TypeCSharp == "DateTime")
                             objects[i] = rdr.GetDateTime(i);
                         else
                             objects[i] = rdr.GetString(i);
                         break;
                     case "INTEGER":
-                        if (_fields.Itens[i].TypeCSharp == "Boolean")
+                        if (_fields.Items[i].TypeCSharp == "Boolean")
                             objects[i] = rdr.GetBoolean(i);
                         else
                             objects[i] = rdr.GetInt32(i);

@@ -5,20 +5,20 @@ namespace SQLiteAbstractCrud
 {
     internal class Fields
     {
-        public List<Field> Itens { get; } = new();
+        public List<Field> Items { get; } = new();
 
-        public void AdicionarCampo(string nome, string tipoCSharp, bool ehPrimaryKey)
+        public void AddField(string name, string csharpType, bool isPrimaryKey)
         {
-            Itens.Add(new Field(nome, tipoCSharp, ehPrimaryKey));
+            Items.Add(new Field(name, csharpType, isPrimaryKey));
         }
 
         public string GetPrimaryKeyName()
         {
-            return Itens.First(x => x.IsPrimaryKey).Name;
+            return Items.First(x => x.IsPrimaryKey).Name;
         }
         public string GetQuotePrimaryKey()
         {
-            return Itens.First(x => x.IsPrimaryKey).Quote;
+            return Items.First(x => x.IsPrimaryKey).Quote;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace SQLiteAbstractCrud
     {
         T Insert(T t);
         void InsertBatch(List<T> list);
-        void Update(T t);
+        T Update(T t, string field, object value);
         IEnumerable<T> GetAll();
         T Get(object id);
         void Delete(object id);

@@ -12,6 +12,8 @@ namespace SQLiteAbstractCrud.Tests.Teste2Campos_StrPk_Int
         public void Init()
         {
             _caminhoArquivoDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
+            var repo = new Teste2Campos_StrPk_Int_Repository(_caminhoArquivoDb);
+            repo.DropTable();
         }
 
         [TearDown]
@@ -47,7 +49,7 @@ namespace SQLiteAbstractCrud.Tests.Teste2Campos_StrPk_Int
             const int valorBar = 123;
             var entidade = new Teste2Campos_StrPk_Int(valorFoo, valorBar);
             var sut = new Teste2Campos_StrPk_Int_Repository(_caminhoArquivoDb);
-            
+
             // act
             sut.Insert(entidade);
 
@@ -56,6 +58,27 @@ namespace SQLiteAbstractCrud.Tests.Teste2Campos_StrPk_Int
             Assert.NotNull(entidadeInserida);
             Assert.AreEqual(valorFoo, entidadeInserida.Foo);
             Assert.AreEqual(valorBar, entidadeInserida.Bar);
+        }
+
+        [Test]
+        public void QuandoEntidadeTiverUmCampoStringPkOutroInt_DeveAtualizar()
+        {
+            // arrange
+            const string valorFoo = "fooValor";
+            const int valorBar = 124;
+            var entidade = new Teste2Campos_StrPk_Int(valorFoo, valorBar);
+            var sut = new Teste2Campos_StrPk_Int_Repository(_caminhoArquivoDb);
+            sut.Insert(entidade);
+            var novoValorBar = 445;
+
+            // act
+            _ = sut.Update(entidade, "Bar", novoValorBar);
+
+            // assert
+            var entidadeInserida = sut.Get(valorFoo);
+            Assert.NotNull(entidadeInserida);
+            Assert.AreEqual(valorFoo, entidadeInserida.Foo);
+            Assert.AreEqual(novoValorBar, entidadeInserida.Bar);
         }
 
         [Test]
