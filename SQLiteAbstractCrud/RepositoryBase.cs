@@ -92,7 +92,8 @@ namespace SQLiteAbstractCrud
 
             _con.Open();
             var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
-            var cmd = new SQLiteCommand(GetQueryGet(fieldsNames, id), _con);
+            var query = GetQueryGet(fieldsNames, id);
+            var cmd = new SQLiteCommand(query, _con);
 
             using (var rdr = cmd.ExecuteReader())
             {
@@ -214,21 +215,44 @@ namespace SQLiteAbstractCrud
 
         private string GetQueryUpdate(T t, string fieldName, object value)
         {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
             var set = " SET ";
             var pkName = _fields.GetPrimaryKeyName();
             var propertyInfo = t.GetType().GetProperty(pkName);
             var pkValue = propertyInfo.GetValue(t, null);
 
+            var pkValueAdjust = AdjustPkValueToQuery(pkValue);
+
+            bool.TryParse(value.ToString(), out bool adj);
+            var valueAdjust = adj ? "1" : "0";
+
             foreach (var f in _fields.Items.Select(x => x.Name).Where(x => x.Equals(fieldName)))
             {
-                set += f + " = " + value + ", ";
+                set += f + " = " + valueAdjust + ", ";
             }
             set = set.Substring(0, set.Length - 2);
 
             var query = $"UPDATE {_table} " +
                         $"{set} " +
-                        $"WHERE {pkName} = {_fields.GetQuotePrimaryKey()}{pkValue}{_fields.GetQuotePrimaryKey()} ;";
+                        $"WHERE {pkName} = {_fields.GetQuotePrimaryKey()}{pkValueAdjust}{_fields.GetQuotePrimaryKey()} ;";
             return query;
+        }
+
+        private static string AdjustPkValueToQuery(object pkValue)
+        {
+            string newPkValue;
+
+            if (_fields.GetPrimaryKeyType().ToLower() == "datetime")
+            {
+                var dateTime = (DateTime)pkValue;
+                newPkValue = dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            }
+            else
+                newPkValue = pkValue.ToString();
+
+            return newPkValue;
         }
 
         private static string GetFieldsCommas(List<string> fields)
@@ -317,10 +341,12 @@ namespace SQLiteAbstractCrud
             return query;
         }
 
-        private string GetQueryWhere(object id)
+        private static string GetQueryWhere(object pkValue)
         {
+            var pkValueAdjust = AdjustPkValueToQuery(pkValue);
+
             var quotePk = _fields.GetQuotePrimaryKey();
-            return $"{quotePk}{id}{quotePk}";
+            return $"{quotePk}{pkValueAdjust}{quotePk}";
         }
 
         private string GetPrimaryKeyName()

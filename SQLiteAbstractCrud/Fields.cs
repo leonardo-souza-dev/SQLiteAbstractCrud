@@ -16,9 +16,15 @@ namespace SQLiteAbstractCrud
         {
             return Items.First(x => x.IsPrimaryKey).Name;
         }
+
         public string GetQuotePrimaryKey()
         {
             return Items.First(x => x.IsPrimaryKey).Quote;
+        }
+
+        public string GetPrimaryKeyType()
+        {
+            return Items.First(x => x.IsPrimaryKey).TypeCSharp;
         }
     }
 }
