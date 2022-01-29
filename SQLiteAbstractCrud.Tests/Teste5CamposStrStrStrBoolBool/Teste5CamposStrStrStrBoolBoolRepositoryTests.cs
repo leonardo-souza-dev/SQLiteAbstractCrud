@@ -11,6 +11,8 @@ namespace SQLiteAbstractCrud.Tests.Teste5CamposStrStrStrBoolBool
         public void Init()
         {
             _caminhoArquivoDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
+            var repo = new Teste5CamposStrStrStrBoolBoolRepository(_caminhoArquivoDb);
+            repo.DropTable();
         }
 
         [TearDown]
@@ -55,7 +57,7 @@ namespace SQLiteAbstractCrud.Tests.Teste5CamposStrStrStrBoolBool
             const bool valor5 = false;
             var entidade = new Teste5CamposStrStrStrBoolBool(valor1, valor2, valor3, valor4, valor5);
             var sut = new Teste5CamposStrStrStrBoolBoolRepository(_caminhoArquivoDb);
-            
+
             // act
             sut.Insert(entidade);
 
@@ -66,6 +68,32 @@ namespace SQLiteAbstractCrud.Tests.Teste5CamposStrStrStrBoolBool
             Assert.AreEqual(valor2, entidadeInserida.Valor2);
             Assert.AreEqual(valor3, entidadeInserida.Valor3);
             Assert.AreEqual(valor4, entidadeInserida.Valor4);
+            Assert.AreEqual(valor5, entidadeInserida.Valor5);
+        }
+
+        [Test]
+        public void QuandoEntidadeTiverTresCamposStringEDoisBool_DeveAtualizar()
+        {
+            // arrange
+            const string valor1 = "asb";
+            const string valor2 = "123";
+            const string valor3 = "qwerty";
+            const bool valor4 = true;
+            const bool valor5 = false;
+            var entidade = new Teste5CamposStrStrStrBoolBool(valor1, valor2, valor3, valor4, valor5);
+            var sut = new Teste5CamposStrStrStrBoolBoolRepository(_caminhoArquivoDb);
+            sut.Insert(entidade);
+
+            // act
+            sut.Update(entidade, "Valor4", false);
+
+            // assert
+            var entidadeInserida = sut.Get(valor1);
+            Assert.NotNull(entidadeInserida);
+            Assert.AreEqual(valor1, entidadeInserida.Valor1);
+            Assert.AreEqual(valor2, entidadeInserida.Valor2);
+            Assert.AreEqual(valor3, entidadeInserida.Valor3);
+            Assert.AreEqual(false, entidadeInserida.Valor4);
             Assert.AreEqual(valor5, entidadeInserida.Valor5);
         }
     }
