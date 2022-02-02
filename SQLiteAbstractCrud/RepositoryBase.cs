@@ -108,13 +108,21 @@ namespace SQLiteAbstractCrud
             return entity;
         }
 
-        public virtual List<T> GetByDateRange(string fieldName, object minInclude, object maxInclude)
+        /// <summary>
+        /// Get records by date (GTE and LTE)
+        /// </summary>
+        /// <param name="fieldName">Name of the field</param>
+        /// <param name="minInclude">Minimum date</param>
+        /// <param name="maxInclude">Maximum date</param>
+        /// <returns>Records</returns>
+        public virtual List<T> GetByDateRange(string fieldName, DateTime minInclude, DateTime maxInclude)
         {
             T entity = default;
 
             _con.Open();
             var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
-            var cmd = new SQLiteCommand(GetQueryDateRange(fieldsNames, fieldName, minInclude, maxInclude), _con);
+            var query = GetQueryDateRange(fieldsNames, fieldName, minInclude, maxInclude);
+            var cmd = new SQLiteCommand(query, _con);
 
             var entities = new List<T>();
 
@@ -334,9 +342,9 @@ namespace SQLiteAbstractCrud
             return $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {GetPrimaryKeyName()} = {GetQueryWhere(value)}";
         }
 
-        private string GetQueryDateRange(List<string> fieldsNames, string fieldName, object paramMin, object paramMax)
+        private string GetQueryDateRange(List<string> fieldsNames, string fieldName, DateTime paramMin, DateTime paramMax)
         {
-            var query = $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {fieldName} > '{paramMin:yyyy-MM-dd 00:00:00.000}' AND {fieldName} < '{paramMax:yyyy-MM-dd 23:59:59.999}'";
+            var query = $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {fieldName} >= '{paramMin:yyyy-MM-dd HH:mm:ss.fff}' AND {fieldName} <= '{paramMax:yyyy-MM-dd HH:mm:ss.fff}'";
             
             return query;
         }
