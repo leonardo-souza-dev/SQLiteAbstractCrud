@@ -3,8 +3,8 @@
     <PropertyGroup>
           <TargetFramework>net5.0</TargetFramework>
           <PackageId>SQLiteAbstractCrud</PackageId>
-          <Version>1.2.2</Version>
-          <Authors>ltreze</Authors>
+          <Version>1.2.3</Version>
+          <Authors>leonardo-souza-dev</Authors>
           <Company>ltreze</Company>
       </PropertyGroup>
     <ItemGroup>

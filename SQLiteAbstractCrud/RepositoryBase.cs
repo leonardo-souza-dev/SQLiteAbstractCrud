@@ -31,8 +31,9 @@ namespace SQLiteAbstractCrud
 
         public virtual T Insert(T t)
         {
-            _con.Open();
-            
+            if (_con.State != ConnectionState.Open)
+                _con.Open();
+
             var queryValuesAdjust = GetValuesCommas(t, _fields);
             var queryInsert = GetQueryInsert(queryValuesAdjust);
 
@@ -46,7 +47,8 @@ namespace SQLiteAbstractCrud
 
         public virtual T Update(T t, string field, object value)
         {
-            _con.Open();
+            if (_con.State != ConnectionState.Open)
+                _con.Open();
 
             var query = GetQueryUpdate(t, field, value);
 
@@ -60,9 +62,12 @@ namespace SQLiteAbstractCrud
 
         public virtual void InsertBatch(List<T> list)
         {
-            _con.Open();
+            if (_con.State != ConnectionState.Open)
+                _con.Open();
+
             var query = GetQueryInsertBatch(list);
             new SQLiteCommand(query, _con).ExecuteNonQuery();
+            
             _con.Close();
         }
 
@@ -70,7 +75,9 @@ namespace SQLiteAbstractCrud
         {
             List<T> entities = new();
 
-            _con.Open();
+            if (_con.State != ConnectionState.Open)
+                _con.Open();
+
             var cmd = new SQLiteCommand(GetQueryGetAll(), _con);
             using (var rdr = cmd.ExecuteReader())
             {
@@ -90,7 +97,9 @@ namespace SQLiteAbstractCrud
         {
             T entity = default;
 
-            _con.Open();
+            if (_con.State != ConnectionState.Open)
+                _con.Open();
+
             var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
             var query = GetQueryGet(fieldsNames, id);
             var cmd = new SQLiteCommand(query, _con);
@@ -119,7 +128,9 @@ namespace SQLiteAbstractCrud
         {
             T entity = default;
 
-            _con.Open();
+            if (_con.State != ConnectionState.Open)
+                _con.Open();
+
             var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
             var query = GetQueryDateRange(fieldsNames, fieldName, minInclude, maxInclude);
             var cmd = new SQLiteCommand(query, _con);
@@ -142,7 +153,8 @@ namespace SQLiteAbstractCrud
 
         public virtual void Delete(object id)
         {
-            _con.Open();
+            if (_con.State != ConnectionState.Open)
+                _con.Open();
 
             var cmd = new SQLiteCommand(GetQueryDelete(id), _con);
             cmd.ExecuteNonQuery();
@@ -152,7 +164,8 @@ namespace SQLiteAbstractCrud
 
         public virtual void DropTable()
         {
-            _con.Open();
+            if (_con.State != ConnectionState.Open)
+                _con.Open();
 
             var cmd = new SQLiteCommand($"DROP TABLE {_table};", _con);
             cmd.ExecuteNonQuery();
@@ -233,8 +246,14 @@ namespace SQLiteAbstractCrud
 
             var pkValueAdjust = AdjustPkValueToQuery(pkValue);
 
-            bool.TryParse(value.ToString(), out bool adj);
+            _ = bool.TryParse(value.ToString(), out bool adj);
             var valueAdjust = adj ? "1" : "0";
+
+            if (value.GetType().Name.ToLower() == "int32")
+            {
+                valueAdjust = value.ToString();
+            }
+
 
             foreach (var f in _fields.Items.Select(x => x.Name).Where(x => x.Equals(fieldName)))
             {
@@ -331,7 +350,9 @@ namespace SQLiteAbstractCrud
         {
             _con = new SQLiteConnection(dataSource);
 
-            _con.Open();
+            if (_con.State != ConnectionState.Open)
+                _con.Open();
+            
             var cmdCreateTable = new SQLiteCommand(GetQueryCreate(), _con);
             cmdCreateTable.ExecuteNonQuery();
             _con.Close();
