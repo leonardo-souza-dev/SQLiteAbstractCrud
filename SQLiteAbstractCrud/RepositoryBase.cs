@@ -97,15 +97,22 @@ namespace SQLiteAbstractCrud
 
             using (var rdr = cmd.ExecuteReader())
             {
-                var msgRdr = $"rdr null: {cmd == null}";
+                var msgRdr = $"rdr null: {rdr == null}";
                 Console.WriteLine(msgRdr);
                 Debug.WriteLine(msgRdr);
 
-                while (rdr.Read())
-                {
-                    var entity = Map(rdr);
+                var msgRdrHasRows = $"rdr has rows: {rdr.HasRows}";
+                Console.WriteLine(msgRdrHasRows);
+                Debug.WriteLine(msgRdrHasRows);
 
-                    entities.Add(entity);
+                if (rdr.HasRows)
+                {
+                    while (rdr.Read())
+                    {
+                        var entity = Map(rdr);
+
+                        entities.Add(entity);
+                    }
                 }
             }
             _con.Close();
