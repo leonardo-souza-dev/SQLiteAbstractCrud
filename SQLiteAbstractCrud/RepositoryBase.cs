@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -78,9 +79,28 @@ namespace SQLiteAbstractCrud
             if (_con.State != ConnectionState.Open)
                 _con.Open();
 
-            var cmd = new SQLiteCommand(GetQueryGetAll(), _con);
+            var msgCon1 = $"conexao status 1: {_con.State}";
+            Console.WriteLine(msgCon1);
+            Debug.WriteLine(msgCon1);
+
+            var query = GetQueryGetAll();
+
+            var msgQuery = $"query: {query}";
+            Console.WriteLine(msgQuery);
+            Debug.WriteLine(msgQuery);
+
+            var cmd = new SQLiteCommand(query, _con);
+
+            var msgCmd = $"cmd null: {cmd == null}";
+            Console.WriteLine(msgCmd);
+            Debug.WriteLine(msgCmd);
+
             using (var rdr = cmd.ExecuteReader())
             {
+                var msgRdr = $"rdr null: {cmd == null}";
+                Console.WriteLine(msgRdr);
+                Debug.WriteLine(msgRdr);
+
                 while (rdr.Read())
                 {
                     var entity = Map(rdr);
@@ -89,6 +109,10 @@ namespace SQLiteAbstractCrud
                 }
             }
             _con.Close();
+
+            var msgCon2 = $"conexao status 2: {_con.State}";
+            Console.WriteLine(msgCon2);
+            Debug.WriteLine(msgCon2);
 
             return entities;
         }
