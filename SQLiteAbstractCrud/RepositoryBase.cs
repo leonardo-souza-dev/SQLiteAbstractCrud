@@ -277,18 +277,25 @@ namespace SQLiteAbstractCrud
 
             var pkValueAdjust = AdjustPkValueToQuery(pkValue);
 
-            _ = bool.TryParse(value.ToString(), out bool adj);
-            var valueAdjust = adj ? "1" : "0";
-
-            if (value.GetType().Name.ToLower() == "int32")
+            var valueAdjust = "";
+            if (value.GetType().Name.ToLower() == "string")
+            {
+                valueAdjust = $"'{value}'";
+            }
+            else if (value.GetType().Name.ToLower() == "int32")
             {
                 valueAdjust = value.ToString();
             }
-
-
-            foreach (var f in _fields.Items.Select(x => x.Name).Where(x => x.Equals(fieldName)))
+            
+            if (string.IsNullOrEmpty(valueAdjust))
             {
-                set += f + " = " + valueAdjust + ", ";
+                _ = bool.TryParse(value.ToString(), out bool adj);
+                valueAdjust = adj ? "1" : "0";
+            }
+
+            foreach (var campo in _fields.Items.Select(x => x.Name).Where(x => x.Equals(fieldName)))
+            {
+                set += $"{campo} = {valueAdjust}, ";
             }
             set = set.Substring(0, set.Length - 2);
 

@@ -95,5 +95,28 @@ namespace SQLiteAbstractCrud.Tests.Teste3Campos_StrPk_Int_Str
             Assert.AreEqual(valorStrPk2, entidade2.Foo);
             Assert.AreEqual(valorStrPk3, entidade3.Foo);
         }
+
+        [Test]
+        public void QuandoEntidadeTiverUmCampoStringOutroIntOutroString_DeveAtualizar()
+        {
+            // arrange
+            const string valorFoo = "fooValor";
+            const int valorBar = 123;
+            const string valorAsdfg = "qwerty";
+            const string valorAsdfgNovo = "outro";
+            var entidade = new Teste3Campos_StrPk_Int_Str(valorFoo, valorBar, valorAsdfg);
+            var sut = new Teste3Campos_StrPk_Int_StrRepository(_caminhoArquivoDb);
+            sut.Insert(entidade);
+
+            // act
+            _ = sut.Update(entidade, "Asdfg", valorAsdfgNovo);
+
+            // assert
+            var entidadeAtualizada = sut.Get(valorFoo);
+            Assert.NotNull(entidadeAtualizada);
+            Assert.AreEqual(valorFoo, entidadeAtualizada.Foo);
+            Assert.AreEqual(valorBar, entidadeAtualizada.Bar);
+            Assert.AreEqual(valorAsdfgNovo, entidadeAtualizada.Asdfg);
+        }
     }
 }
