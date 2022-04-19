@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace SQLiteAbstractCrud.Tests.Teste3CamposStrPkStrPkStr
 {
-    public class Teste3CamposStrPkStrPkStrRepositoryTests
+    public class Teste3Campos_StrPk_StrPk_StrRepositoryTests
     {
         private string _caminhoArquivoDb;
 
@@ -16,7 +16,7 @@ namespace SQLiteAbstractCrud.Tests.Teste3CamposStrPkStrPkStr
         [TearDown]
         public void Setup()
         {
-            var repo = new Teste3CamposStrPkStrPkStrRepository(_caminhoArquivoDb);
+            var repo = new Teste3Campos_StrPk_StrPk_StrRepository(_caminhoArquivoDb);
             repo.DropTable();
         }
 
@@ -27,8 +27,8 @@ namespace SQLiteAbstractCrud.Tests.Teste3CamposStrPkStrPkStr
             const string valorFoo = "fooValor";
             const string valorBar = "123";
             const string valorZab = "zabValor";
-            var sut = new Teste3CamposStrPkStrPkStrRepository(_caminhoArquivoDb);
-            sut.Insert(new Teste3CamposStrPkStrPkStr(valorFoo, valorBar, valorZab));
+            var sut = new Teste3Campos_StrPk_StrPk_StrRepository(_caminhoArquivoDb);
+            sut.Insert(new Teste3Campos_StrPk_StrPk_Str(valorFoo, valorBar, valorZab));
 
             // act
             var result = sut.Get(valorFoo);
@@ -47,8 +47,8 @@ namespace SQLiteAbstractCrud.Tests.Teste3CamposStrPkStrPkStr
             const string valorFoo = "fooValor";
             const string valorBar = "123";
             const string valorZab = "zabValor";
-            var entidade = new Teste3CamposStrPkStrPkStr(valorFoo, valorBar, valorZab);
-            var sut = new Teste3CamposStrPkStrPkStrRepository(_caminhoArquivoDb);
+            var entidade = new Teste3Campos_StrPk_StrPk_Str(valorFoo, valorBar, valorZab);
+            var sut = new Teste3Campos_StrPk_StrPk_StrRepository(_caminhoArquivoDb);
             
             // act
             sut.Insert(entidade);

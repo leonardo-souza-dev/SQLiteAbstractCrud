@@ -9,15 +9,17 @@ namespace SQLiteAbstractCrud
         public string TypeSQLite { get; private set; }
         public string Quote { get; private set; }
         public bool IsPrimaryKey { get; }
-        
+        public bool IsAutoincrement { get; }
+
         public Field(string name, string typeCSharp)
         {
             CtorConfig(name, typeCSharp);
         }
         
-        public Field(string name, string typeCSharp, bool isPrimaryKey)
+        public Field(string name, string typeCSharp, bool isPrimaryKey, bool isAutoincrement)
         {
             IsPrimaryKey = isPrimaryKey;
+            IsAutoincrement = isAutoincrement;
             
             CtorConfig(name, typeCSharp);
         }

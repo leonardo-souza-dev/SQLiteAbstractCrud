@@ -7,9 +7,9 @@ namespace SQLiteAbstractCrud
     {
         public List<Field> Items { get; } = new();
 
-        public void AddField(string name, string csharpType, bool isPrimaryKey)
+        public void AddField(string name, string csharpType, bool isPrimaryKey, bool isAutoincrement)
         {
-            Items.Add(new Field(name, csharpType, isPrimaryKey));
+            Items.Add(new Field(name, csharpType, isPrimaryKey, isAutoincrement));
         }
 
         public string GetPrimaryKeyName()

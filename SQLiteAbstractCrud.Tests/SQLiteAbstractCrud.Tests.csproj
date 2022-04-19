@@ -30,9 +30,9 @@
     <EmbeddedResource Remove="Teste1CampoStrPk\**" />
     <EmbeddedResource Remove="Teste2CamposStrInt\**" />
     <EmbeddedResource Remove="Teste3CamposStrIntStr\**" />
-    <EmbeddedResource Remove="Teste3CamposStrPkStrPkStr\**" />
-    <EmbeddedResource Remove="Teste3CamposStrStrDatetime\**" />
-    <EmbeddedResource Remove="Teste5CamposStrStrStrBoolBool\**" />
+    <EmbeddedResource Remove="Teste3Campos_StrPk_StrPk_Str\**" />
+    <EmbeddedResource Remove="Teste3Campos_Str_Int_Datetime\**" />
+    <EmbeddedResource Remove="Teste5Campos_Str_Str_Str_Bool_Bool\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="mydb.db" />

@@ -210,7 +210,7 @@ namespace SQLiteAbstractCrud
         {
             var queryValuesAdjust = "";
             var queryValues = "";
-            foreach (var field in fields.Items)
+            foreach (var field in fields.Items.Where(x => !x.IsAutoincrement))
             {
                 var rawValue = t.GetType().GetProperty(field.Name).GetValue(t, null);
                 object value = "";
@@ -247,7 +247,9 @@ namespace SQLiteAbstractCrud
     
             var repositoriosValue = sb.ToString().Substring(0, sb.Length - 2);
 
-            var query = $"INSERT OR REPLACE INTO {_table} ({GetFieldsCommas(_fields.Items.Select(x => x.Name).ToList())}) VALUES {repositoriosValue};";
+            var fieldsCommas = GetFieldsCommasFields(_fields.Items.Where(x => !x.IsAutoincrement).ToList());
+
+            var query = $"INSERT OR REPLACE INTO {_table} ({fieldsCommas}) VALUES {repositoriosValue};";
             
             return query;
         }
@@ -333,6 +335,19 @@ namespace SQLiteAbstractCrud
             return queryFieldsAdjust;
         }
 
+        private static string GetFieldsCommasFields(List<Field> fields)
+        {
+            var queryFields = "";
+            foreach (Field field in fields)
+            {
+                queryFields += $"{field.Name},";
+            }
+
+            var queryFieldsAdjust = queryFields.Substring(0, queryFields.Length - 1);
+
+            return queryFieldsAdjust;
+        }
+
         private string GetQueryGetAll()
         {
             var query = $"SELECT {GetFieldsCommas(_fields.Items.Select(x => x.Name).ToList())} FROM {_table};";
@@ -344,11 +359,15 @@ namespace SQLiteAbstractCrud
         {
             var fieldsQuery = _fields.Items.Aggregate("", (current, property) => current + $"{property.Name} {property.TypeSQLite} NOT NULL,");
             var fieldPk = _fields.Items.Where(x => x.IsPrimaryKey).Select(x => x.Name).ToList();
+            var hasFieldAutoincrement = _fields.Items.Any(x => x.IsAutoincrement);
+
+            if (fieldPk.Count > 1 && hasFieldAutoincrement)
+                throw new ApplicationException("Nao e possivel criar tabela com campo autoincrement como chave primaria dupla");
 
             if (fieldPk == null || !fieldPk.Any())
-                throw new ApplicationException("Não foi encontrada nenhuma Primary Key na entidade");
+                throw new ApplicationException("Nao foi encontrada nenhuma Chave Primaria na entidade");
             
-            var queryCreate = $"CREATE TABLE if not exists {_table} ( {fieldsQuery} PRIMARY KEY({GetFieldsCommas(fieldPk)}))";
+            var queryCreate = $"CREATE TABLE if not exists {_table} ( {fieldsQuery} PRIMARY KEY({GetFieldsCommas(fieldPk)} {(hasFieldAutoincrement ? "AUTOINCREMENT" : "")}))";
             
             return queryCreate;
         }
@@ -360,8 +379,9 @@ namespace SQLiteAbstractCrud
             foreach (var t in typeof(T).GetProperties())
             {
                 var primaryKeyAttribute = t.GetCustomAttributes(typeof(PrimaryKeyAttribute), true);
-                
-                _fields.AddField(t.Name, t.PropertyType.Name, primaryKeyAttribute.Any());
+                var autoincrementAttribute = t.GetCustomAttributes(typeof(AutoIncrementAttribute), true);
+
+                _fields.AddField(t.Name, t.PropertyType.Name, primaryKeyAttribute.Any(), autoincrementAttribute.Any());
             }
         }
         
