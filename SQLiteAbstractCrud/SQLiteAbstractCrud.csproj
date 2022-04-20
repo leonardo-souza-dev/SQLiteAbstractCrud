@@ -3,9 +3,11 @@
     <PropertyGroup>
           <TargetFramework>net5.0</TargetFramework>
           <PackageId>SQLiteAbstractCrud</PackageId>
-          <Version>1.2.5</Version>
+          <Version>1.2.6</Version>
           <Authors>leonardo-souza-dev</Authors>
           <Company>ltreze</Company>
+          <Description>Abstraction for CRUD operations</Description>
+          <PackageProjectUrl>https://github.com/leonardo-souza-dev/SQLiteAbstractCrud</PackageProjectUrl>
       </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="System.Data.SQLite" Version="1.0.115.5" />
