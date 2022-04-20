@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests.Teste5CamposStrStrStrBoolBool
+namespace SQLiteAbstractCrud.Tests
 {
-    public class Teste5CamposStrStrStrBoolBoolRepositoryTests
+    public class Teste5Campos_Str_Str_Str_Bool_Bool_RepositoryTests
     {
         private string _caminhoArquivoDb;
 
@@ -11,14 +11,14 @@ namespace SQLiteAbstractCrud.Tests.Teste5CamposStrStrStrBoolBool
         public void Init()
         {
             _caminhoArquivoDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
-            var repo = new Teste5CamposStrStrStrBoolBoolRepository(_caminhoArquivoDb);
+            var repo = new Teste5Campos_Str_Str_Str_Bool_Bool_Repository(_caminhoArquivoDb);
             repo.DropTable();
         }
 
         [TearDown]
         public void Setup()
         {
-            var repo = new Teste5CamposStrStrStrBoolBoolRepository(_caminhoArquivoDb);
+            var repo = new Teste5Campos_Str_Str_Str_Bool_Bool_Repository(_caminhoArquivoDb);
             repo.DropTable();
         }
 
@@ -31,8 +31,8 @@ namespace SQLiteAbstractCrud.Tests.Teste5CamposStrStrStrBoolBool
             const string valor3 = "qwerty";
             const bool valor4 = true;
             const bool valor5 = false;
-            var sut = new Teste5CamposStrStrStrBoolBoolRepository(_caminhoArquivoDb);
-            sut.Insert(new Teste5CamposStrStrStrBoolBool(valor1, valor2, valor3, valor4, valor5));
+            var sut = new Teste5Campos_Str_Str_Str_Bool_Bool_Repository(_caminhoArquivoDb);
+            sut.Insert(new Teste5Campos_Str_Str_Str_Bool_Bool(valor1, valor2, valor3, valor4, valor5));
 
             // act
             var result = sut.Get(valor1);
@@ -55,8 +55,8 @@ namespace SQLiteAbstractCrud.Tests.Teste5CamposStrStrStrBoolBool
             const string valor3 = "qwerty";
             const bool valor4 = true;
             const bool valor5 = false;
-            var entidade = new Teste5CamposStrStrStrBoolBool(valor1, valor2, valor3, valor4, valor5);
-            var sut = new Teste5CamposStrStrStrBoolBoolRepository(_caminhoArquivoDb);
+            var entidade = new Teste5Campos_Str_Str_Str_Bool_Bool(valor1, valor2, valor3, valor4, valor5);
+            var sut = new Teste5Campos_Str_Str_Str_Bool_Bool_Repository(_caminhoArquivoDb);
 
             // act
             sut.Insert(entidade);
@@ -80,8 +80,8 @@ namespace SQLiteAbstractCrud.Tests.Teste5CamposStrStrStrBoolBool
             const string valor3 = "qwerty";
             const bool valor4 = true;
             const bool valor5 = false;
-            var entidade = new Teste5CamposStrStrStrBoolBool(valor1, valor2, valor3, valor4, valor5);
-            var sut = new Teste5CamposStrStrStrBoolBoolRepository(_caminhoArquivoDb);
+            var entidade = new Teste5Campos_Str_Str_Str_Bool_Bool(valor1, valor2, valor3, valor4, valor5);
+            var sut = new Teste5Campos_Str_Str_Str_Bool_Bool_Repository(_caminhoArquivoDb);
             sut.Insert(entidade);
 
             // act
@@ -95,6 +95,32 @@ namespace SQLiteAbstractCrud.Tests.Teste5CamposStrStrStrBoolBool
             Assert.AreEqual(valor3, entidadeInserida.Valor3);
             Assert.AreEqual(false, entidadeInserida.Valor4);
             Assert.AreEqual(valor5, entidadeInserida.Valor5);
+        }
+    }
+
+    public class Teste5Campos_Str_Str_Str_Bool_Bool_Repository : RepositoryBase<Teste5Campos_Str_Str_Str_Bool_Bool>
+    {
+        public Teste5Campos_Str_Str_Str_Bool_Bool_Repository(string pathDbFile) : base(pathDbFile)
+        {
+        }
+    }
+
+    public class Teste5Campos_Str_Str_Str_Bool_Bool
+    {
+        [PrimaryKey]
+        public string Valor1 { get; init; }
+        public string Valor2 { get; init; }
+        public string Valor3 { get; init; }
+        public bool Valor4 { get; init; }
+        public bool Valor5 { get; init; }
+
+        public Teste5Campos_Str_Str_Str_Bool_Bool(string valor1, string valor2, string valor3, bool valor4, bool valor5)
+        {
+            Valor1 = valor1;
+            Valor2 = valor2;
+            Valor3 = valor3;
+            Valor4 = valor4;
+            Valor5 = valor5;
         }
     }
 }

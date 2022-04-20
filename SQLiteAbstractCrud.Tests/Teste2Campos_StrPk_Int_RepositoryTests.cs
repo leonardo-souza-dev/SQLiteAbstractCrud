@@ -2,7 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests.Teste2Campos_StrPk_Int
+namespace SQLiteAbstractCrud.Tests
 {
     public class Teste2Campos_StrPk_Int_RepositoryTests
     {
@@ -110,6 +110,26 @@ namespace SQLiteAbstractCrud.Tests.Teste2Campos_StrPk_Int
             Assert.AreEqual(valor1, entidade1.Foo);
             Assert.AreEqual(valor2, entidade2.Foo);
             Assert.AreEqual(valor3, entidade3.Foo);
+        }
+    }
+
+    public class Teste2Campos_StrPk_Int_Repository : RepositoryBase<Teste2Campos_StrPk_Int>
+    {
+        public Teste2Campos_StrPk_Int_Repository(string pathDbFile) : base(pathDbFile)
+        {
+        }
+    }
+
+    public class Teste2Campos_StrPk_Int
+    {
+        [PrimaryKey]
+        public string Foo { get; }
+        public int Bar { get; }
+
+        public Teste2Campos_StrPk_Int(string foo, int bar)
+        {
+            Foo = foo;
+            Bar = bar;
         }
     }
 }

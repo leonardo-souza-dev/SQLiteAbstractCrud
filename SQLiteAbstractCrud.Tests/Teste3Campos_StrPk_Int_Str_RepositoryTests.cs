@@ -2,9 +2,9 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests.Teste3Campos_StrPk_Int_Str
+namespace SQLiteAbstractCrud.Tests
 {
-    public class Teste3Campos_StrPk_Int_StrRepositoryTests
+    public class Teste3Campos_StrPk_Int_Str_RepositoryTests
     {
         private string _caminhoArquivoDb;
 
@@ -17,7 +17,7 @@ namespace SQLiteAbstractCrud.Tests.Teste3Campos_StrPk_Int_Str
         [TearDown]
         public void Setup()
         {
-            var repo = new Teste3Campos_StrPk_Int_StrRepository(_caminhoArquivoDb);
+            var repo = new Teste3Campos_StrPk_Int_Str_Repository(_caminhoArquivoDb);
             repo.DropTable();
         }
 
@@ -28,7 +28,7 @@ namespace SQLiteAbstractCrud.Tests.Teste3Campos_StrPk_Int_Str
             const string valorFoo = "fooValor";
             const int valorBar = 123;
             const string valorAsdfg = "qwerty";
-            var sut = new Teste3Campos_StrPk_Int_StrRepository(_caminhoArquivoDb);
+            var sut = new Teste3Campos_StrPk_Int_Str_Repository(_caminhoArquivoDb);
             sut.Insert(new Teste3Campos_StrPk_Int_Str(valorFoo, valorBar, valorAsdfg));
 
             // act
@@ -49,7 +49,7 @@ namespace SQLiteAbstractCrud.Tests.Teste3Campos_StrPk_Int_Str
             const int valorBar = 123;
             const string valorAsdfg = "qwerty";
             var entidade = new Teste3Campos_StrPk_Int_Str(valorFoo, valorBar, valorAsdfg);
-            var sut = new Teste3Campos_StrPk_Int_StrRepository(_caminhoArquivoDb);
+            var sut = new Teste3Campos_StrPk_Int_Str_Repository(_caminhoArquivoDb);
             
             // act
             sut.Insert(entidade);
@@ -79,7 +79,7 @@ namespace SQLiteAbstractCrud.Tests.Teste3Campos_StrPk_Int_Str
             var entidade2 = new Teste3Campos_StrPk_Int_Str(valorStrPk2, valorInt2, valorStr2);
             var entidade3 = new Teste3Campos_StrPk_Int_Str(valorStrPk3, valorInt3, valorStr3);
             
-            var sut = new Teste3Campos_StrPk_Int_StrRepository(_caminhoArquivoDb);
+            var sut = new Teste3Campos_StrPk_Int_Str_Repository(_caminhoArquivoDb);
             
             // act
             sut.InsertBatch(new List<Teste3Campos_StrPk_Int_Str>{ entidade1, entidade2, entidade3 });
@@ -105,7 +105,7 @@ namespace SQLiteAbstractCrud.Tests.Teste3Campos_StrPk_Int_Str
             const string valorAsdfg = "qwerty";
             const string valorAsdfgNovo = "outro";
             var entidade = new Teste3Campos_StrPk_Int_Str(valorFoo, valorBar, valorAsdfg);
-            var sut = new Teste3Campos_StrPk_Int_StrRepository(_caminhoArquivoDb);
+            var sut = new Teste3Campos_StrPk_Int_Str_Repository(_caminhoArquivoDb);
             sut.Insert(entidade);
 
             // act
@@ -117,6 +117,28 @@ namespace SQLiteAbstractCrud.Tests.Teste3Campos_StrPk_Int_Str
             Assert.AreEqual(valorFoo, entidadeAtualizada.Foo);
             Assert.AreEqual(valorBar, entidadeAtualizada.Bar);
             Assert.AreEqual(valorAsdfgNovo, entidadeAtualizada.Asdfg);
+        }
+    }
+
+    public class Teste3Campos_StrPk_Int_Str_Repository : RepositoryBase<Teste3Campos_StrPk_Int_Str>
+    {
+        public Teste3Campos_StrPk_Int_Str_Repository(string pathDbFile) : base(pathDbFile)
+        {
+        }
+    }
+
+    public class Teste3Campos_StrPk_Int_Str
+    {
+        [PrimaryKey]
+        public string Foo { get; init; }
+        public int Bar { get; init; }
+        public string Asdfg { get; init; }
+
+        public Teste3Campos_StrPk_Int_Str(string foo, int bar, string asdfg)
+        {
+            Foo = foo;
+            Bar = bar;
+            Asdfg = asdfg;
         }
     }
 }

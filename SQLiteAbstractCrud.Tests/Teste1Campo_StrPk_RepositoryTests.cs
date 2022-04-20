@@ -3,22 +3,22 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests.Teste1Campo_StrPk
+namespace SQLiteAbstractCrud.Tests
 {
-    public class Teste1Campo_StrPkRepositoryTests
+    public class Teste1Campo_StrPk_RepositoryTests
     {
-        private string _caminhoArquivoDb;
+        private string _pathFileDb;
 
         [SetUp]
         public void Init()
         {
-            _caminhoArquivoDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
+            _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
         }
 
         [TearDown]
         public void Setup()
         {
-            var repo = new Teste1Campo_StrPkRepository(_caminhoArquivoDb);
+            var repo = new Teste1Campo_StrPkRepository(_pathFileDb);
             repo.DropTable();
         }
 
@@ -27,7 +27,7 @@ namespace SQLiteAbstractCrud.Tests.Teste1Campo_StrPk
         {
             // arrange
             const string valorFoo = "fooValor";
-            var sut = new Teste1Campo_StrPkRepository(_caminhoArquivoDb);
+            var sut = new Teste1Campo_StrPkRepository(_pathFileDb);
             sut.Insert(new Teste1Campo_StrPk(valorFoo));
 
             // act
@@ -44,7 +44,7 @@ namespace SQLiteAbstractCrud.Tests.Teste1Campo_StrPk
             // arrange
             const string valorFoo = "fooValor";
             var entidade = new Teste1Campo_StrPk(valorFoo);
-            var sut = new Teste1Campo_StrPkRepository(_caminhoArquivoDb);
+            var sut = new Teste1Campo_StrPkRepository(_pathFileDb);
             
             // act
             sut.Insert(entidade);
@@ -61,7 +61,7 @@ namespace SQLiteAbstractCrud.Tests.Teste1Campo_StrPk
             // arrange
             var entidade1 = new Teste1Campo_StrPk("fooValor1");
             var entidade2 = new Teste1Campo_StrPk("fooValor2");
-            var sut = new Teste1Campo_StrPkRepository(_caminhoArquivoDb);
+            var sut = new Teste1Campo_StrPkRepository(_pathFileDb);
             sut.Insert(entidade1);
             sut.Insert(entidade2);
             
@@ -86,7 +86,7 @@ namespace SQLiteAbstractCrud.Tests.Teste1Campo_StrPk
             var entidade2 = new Teste1Campo_StrPk(valor2);
             var entidade3 = new Teste1Campo_StrPk(valor3);
             
-            var sut = new Teste1Campo_StrPkRepository(_caminhoArquivoDb);
+            var sut = new Teste1Campo_StrPkRepository(_pathFileDb);
             
             // act
             sut.InsertBatch(new List<Teste1Campo_StrPk>{ entidade1, entidade2, entidade3 });
@@ -101,6 +101,24 @@ namespace SQLiteAbstractCrud.Tests.Teste1Campo_StrPk
             Assert.AreEqual(valor1, entidade1.Foo);
             Assert.AreEqual(valor2, entidade2.Foo);
             Assert.AreEqual(valor3, entidade3.Foo);
+        }
+    }
+
+    public class Teste1Campo_StrPkRepository : RepositoryBase<Teste1Campo_StrPk>
+    {
+        public Teste1Campo_StrPkRepository(string pathDbFile) : base(pathDbFile)
+        {
+        }
+    }
+
+    public class Teste1Campo_StrPk
+    {
+        [PrimaryKey]
+        public string Foo { get; }
+
+        public Teste1Campo_StrPk(string foo)
+        {
+            Foo = foo;
         }
     }
 }

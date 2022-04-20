@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests.Teste3CamposStrPkStrPkStr
+namespace SQLiteAbstractCrud.Tests
 {
-    public class Teste3Campos_StrPk_StrPk_StrRepositoryTests
+    public class Teste3Campos_StrPk_StrPk_Str_RepositoryTests
     {
         private string _caminhoArquivoDb;
 
@@ -16,7 +16,7 @@ namespace SQLiteAbstractCrud.Tests.Teste3CamposStrPkStrPkStr
         [TearDown]
         public void Setup()
         {
-            var repo = new Teste3Campos_StrPk_StrPk_StrRepository(_caminhoArquivoDb);
+            var repo = new Teste3Campos_StrPk_StrPk_Str_Repository(_caminhoArquivoDb);
             repo.DropTable();
         }
 
@@ -27,7 +27,7 @@ namespace SQLiteAbstractCrud.Tests.Teste3CamposStrPkStrPkStr
             const string valorFoo = "fooValor";
             const string valorBar = "123";
             const string valorZab = "zabValor";
-            var sut = new Teste3Campos_StrPk_StrPk_StrRepository(_caminhoArquivoDb);
+            var sut = new Teste3Campos_StrPk_StrPk_Str_Repository(_caminhoArquivoDb);
             sut.Insert(new Teste3Campos_StrPk_StrPk_Str(valorFoo, valorBar, valorZab));
 
             // act
@@ -48,7 +48,7 @@ namespace SQLiteAbstractCrud.Tests.Teste3CamposStrPkStrPkStr
             const string valorBar = "123";
             const string valorZab = "zabValor";
             var entidade = new Teste3Campos_StrPk_StrPk_Str(valorFoo, valorBar, valorZab);
-            var sut = new Teste3Campos_StrPk_StrPk_StrRepository(_caminhoArquivoDb);
+            var sut = new Teste3Campos_StrPk_StrPk_Str_Repository(_caminhoArquivoDb);
             
             // act
             sut.Insert(entidade);
@@ -59,6 +59,29 @@ namespace SQLiteAbstractCrud.Tests.Teste3CamposStrPkStrPkStr
             Assert.AreEqual(valorFoo, entidadeInserida.Foo);
             Assert.AreEqual(valorBar, entidadeInserida.Bar);
             Assert.AreEqual(valorZab, entidadeInserida.Zab);
+        }
+    }
+
+    public class Teste3Campos_StrPk_StrPk_Str_Repository : RepositoryBase<Teste3Campos_StrPk_StrPk_Str>
+    {
+        public Teste3Campos_StrPk_StrPk_Str_Repository(string pathDbFile) : base(pathDbFile)
+        {
+        }
+    }
+
+    public class Teste3Campos_StrPk_StrPk_Str
+    {
+        [PrimaryKey]
+        public string Foo { get; init; }
+        [PrimaryKey]
+        public string Bar { get; init; }
+        public string Zab { get; init; }
+
+        public Teste3Campos_StrPk_StrPk_Str(string foo, string bar, string zab)
+        {
+            Foo = foo;
+            Bar = bar;
+            Zab = zab;
         }
     }
 }

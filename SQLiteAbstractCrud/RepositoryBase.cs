@@ -79,32 +79,12 @@ namespace SQLiteAbstractCrud
             if (_con.State != ConnectionState.Open)
                 _con.Open();
 
-            var msgCon1 = $"conexao status 1: {_con.State}";
-            Console.WriteLine(msgCon1);
-            Debug.WriteLine(msgCon1);
-
             var query = GetQueryGetAll();
-
-            var msgQuery = $"query: {query}";
-            Console.WriteLine(msgQuery);
-            Debug.WriteLine(msgQuery);
 
             var cmd = new SQLiteCommand(query, _con);
 
-            var msgCmd = $"cmd null: {cmd == null}";
-            Console.WriteLine(msgCmd);
-            Debug.WriteLine(msgCmd);
-
             using (var rdr = cmd.ExecuteReader())
             {
-                var msgRdr = $"rdr null: {rdr == null}";
-                Console.WriteLine(msgRdr);
-                Debug.WriteLine(msgRdr);
-
-                var msgRdrHasRows = $"rdr has rows: {rdr.HasRows}";
-                Console.WriteLine(msgRdrHasRows);
-                Debug.WriteLine(msgRdrHasRows);
-
                 if (rdr.HasRows)
                 {
                     while (rdr.Read())
@@ -116,10 +96,6 @@ namespace SQLiteAbstractCrud
                 }
             }
             _con.Close();
-
-            var msgCon2 = $"conexao status 2: {_con.State}";
-            Console.WriteLine(msgCon2);
-            Debug.WriteLine(msgCon2);
 
             return entities;
         }

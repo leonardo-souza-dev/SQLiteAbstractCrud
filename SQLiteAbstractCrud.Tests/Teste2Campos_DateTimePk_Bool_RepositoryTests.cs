@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests.Teste2Campos_StrPk_Int
+namespace SQLiteAbstractCrud.Tests
 {
     public class Teste2Campos_DateTimePk_Bool_RepositoryTests
     {
@@ -81,6 +81,26 @@ namespace SQLiteAbstractCrud.Tests.Teste2Campos_StrPk_Int
 
             // assert
             Assert.AreEqual(0, actual.Count());
+        }
+    }
+
+    public class Teste2Campos_DateTimePk_Bool_Repository : RepositoryBase<Teste2Campos_DateTimePk_Bool>
+    {
+        public Teste2Campos_DateTimePk_Bool_Repository(string pathDbFile) : base(pathDbFile)
+        {
+        }
+    }
+
+    public class Teste2Campos_DateTimePk_Bool
+    {
+        [PrimaryKey]
+        public DateTime CampoDateTime { get; }
+        public bool CampoBool { get; }
+
+        public Teste2Campos_DateTimePk_Bool(DateTime foo, bool bar)
+        {
+            CampoDateTime = foo;
+            CampoBool = bar;
         }
     }
 }
