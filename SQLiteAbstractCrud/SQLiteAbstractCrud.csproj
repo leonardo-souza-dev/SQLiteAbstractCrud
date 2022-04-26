@@ -3,10 +3,10 @@
     <PropertyGroup>
           <TargetFramework>net5.0</TargetFramework>
           <PackageId>SQLiteAbstractCrud</PackageId>
-          <Version>1.2.6</Version>
+          <Version>1.2.7</Version>
           <Authors>leonardo-souza-dev</Authors>
           <Company>ltreze</Company>
-          <Description>Abstraction for CRUD operations</Description>
+          <Description>Abstraction for CRUD operations for SQLite</Description>
           <PackageProjectUrl>https://github.com/leonardo-souza-dev/SQLiteAbstractCrud</PackageProjectUrl>
       </PropertyGroup>
     <ItemGroup>
