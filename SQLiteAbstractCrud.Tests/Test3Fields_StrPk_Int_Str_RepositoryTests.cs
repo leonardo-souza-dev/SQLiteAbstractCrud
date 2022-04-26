@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace SQLiteAbstractCrud.Tests
 {
-    public class Teste3Campos_StrPk_Int_Str_RepositoryTests
+    public class Test3Fields_StrPk_Int_Str_RepositoryTests
     {
         private string _caminhoArquivoDb;
 

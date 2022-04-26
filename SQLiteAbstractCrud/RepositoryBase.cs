@@ -163,7 +163,9 @@ namespace SQLiteAbstractCrud
             if (_con.State != ConnectionState.Open)
                 _con.Open();
 
-            var cmd = new SQLiteCommand(GetQueryDelete(id), _con);
+            var query = GetQueryDelete(id);
+
+            var cmd = new SQLiteCommand(query, _con);
             cmd.ExecuteNonQuery();
 
             _con.Close();
@@ -230,15 +232,47 @@ namespace SQLiteAbstractCrud
             return query;
         }
         
-        private string GetQueryDelete(object valor)
+        private string GetQueryDelete(object value)
         {
-            return $"DELETE FROM {_table} WHERE {_fields.GetPrimaryKeyName()} = {_fields.GetQuotePrimaryKey()}{valor}{_fields.GetQuotePrimaryKey()};";
+            var query = $"DELETE FROM {_table} WHERE {_fields.GetPrimaryKeyName()} = {_fields.GetQuotePrimaryKey()}{GetValue(value)}{_fields.GetQuotePrimaryKey()};";
+            return query;
+        }
+
+
+        private static string GetValue(object valor)
+        {
+            Console.WriteLine(Environment.NewLine);
+            Console.WriteLine("1");
+            DateTime? chablau = null;
+            try
+            {
+                chablau = (DateTime)valor;
+                Console.WriteLine("2");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("3 " + ex.ToString());
+            }
+
+            Console.WriteLine("4");
+            if (chablau.HasValue)
+            {
+                Console.WriteLine("5");
+                if (DateTime.TryParse(chablau.Value.ToString(), out DateTime dateValue))
+                {
+                    Console.WriteLine("6");
+                    return dateValue.Year + "-" + dateValue.Month.ToString().PadLeft(2, '0') + "-" + dateValue.Day.ToString().PadLeft(2, '0') + " " +
+                        dateValue.Hour.ToString().PadLeft(2, '0') + ":" + dateValue.Minute.ToString().PadLeft(2, '0') + ":" + dateValue.Second.ToString().PadLeft(2, '0') + "." + dateValue.Millisecond.ToString().PadLeft(3, '0');
+                }
+            }
+            Console.WriteLine("7");
+            return valor.ToString();
         }
 
         private string GetQueryInsert(string queryValuesAdjust)
         {
             var query = $"INSERT OR REPLACE INTO {_table} " +
-                        $"({GetFieldsCommas(_fields.Items.Select(x => x.Name).ToList())}) " +
+                        $"({GetFieldsCommasFields(_fields.Items.Where(x => !x.IsAutoincrement).ToList())}) " +
                         $"VALUES ({queryValuesAdjust});";
             return query;
         }

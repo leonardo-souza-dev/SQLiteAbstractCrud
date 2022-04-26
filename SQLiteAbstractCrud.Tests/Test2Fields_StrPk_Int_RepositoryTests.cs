@@ -4,22 +4,22 @@ using NUnit.Framework;
 
 namespace SQLiteAbstractCrud.Tests
 {
-    public class Teste2Campos_StrPk_Int_RepositoryTests
+    public class Test2Fields_StrPk_Int_RepositoryTests
     {
-        private string _caminhoArquivoDb;
+        private string _pathFileDb;
 
         [SetUp]
         public void Init()
         {
-            _caminhoArquivoDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
-            var repo = new Teste2Campos_StrPk_Int_Repository(_caminhoArquivoDb);
+            _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
+            var repo = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
             repo.DropTable();
         }
 
         [TearDown]
         public void Setup()
         {
-            var repo = new Teste2Campos_StrPk_Int_Repository(_caminhoArquivoDb);
+            var repo = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
             repo.DropTable();
         }
 
@@ -29,7 +29,7 @@ namespace SQLiteAbstractCrud.Tests
             // arrange
             const string valorFoo = "fooValor";
             const int valorBar = 123;
-            var sut = new Teste2Campos_StrPk_Int_Repository(_caminhoArquivoDb);
+            var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
             sut.Insert(new Teste2Campos_StrPk_Int(valorFoo, valorBar));
 
             // act
@@ -48,7 +48,7 @@ namespace SQLiteAbstractCrud.Tests
             const string valorFoo = "fooValor";
             const int valorBar = 123;
             var entidade = new Teste2Campos_StrPk_Int(valorFoo, valorBar);
-            var sut = new Teste2Campos_StrPk_Int_Repository(_caminhoArquivoDb);
+            var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
 
             // act
             sut.Insert(entidade);
@@ -67,7 +67,7 @@ namespace SQLiteAbstractCrud.Tests
             const string valorFoo = "fooValor";
             const int valorBar = 124;
             var entidade = new Teste2Campos_StrPk_Int(valorFoo, valorBar);
-            var sut = new Teste2Campos_StrPk_Int_Repository(_caminhoArquivoDb);
+            var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
             sut.Insert(entidade);
             var novoValorBar = 445;
 
@@ -95,7 +95,7 @@ namespace SQLiteAbstractCrud.Tests
             var entidade2 = new Teste2Campos_StrPk_Int(valor2, valorInt2);
             var entidade3 = new Teste2Campos_StrPk_Int(valor3, valorInt3);
             
-            var sut = new Teste2Campos_StrPk_Int_Repository(_caminhoArquivoDb);
+            var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
             
             // act
             sut.InsertBatch(new List<Teste2Campos_StrPk_Int>{ entidade1, entidade2, entidade3 });
@@ -113,9 +113,9 @@ namespace SQLiteAbstractCrud.Tests
         }
     }
 
-    public class Teste2Campos_StrPk_Int_Repository : RepositoryBase<Teste2Campos_StrPk_Int>
+    public class Test2Fields_StrPk_Int_Repository : RepositoryBase<Teste2Campos_StrPk_Int>
     {
-        public Teste2Campos_StrPk_Int_Repository(string pathDbFile) : base(pathDbFile)
+        public Test2Fields_StrPk_Int_Repository(string pathDbFile) : base(pathDbFile)
         {
         }
     }
