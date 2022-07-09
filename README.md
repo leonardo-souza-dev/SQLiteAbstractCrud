@@ -2,13 +2,14 @@
 
 Use:
 
-    public class MyEntityRepository : RepositoryBase<MyEntity>
-    {
-        public MyEntityRepository(string pathDbFile) : base(pathDbFile)
-        {
-        }
-    }
+```
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using SQLiteAbstractCrud;
 
+namespace AbstractCrud
+{
     public class Program
     {
         static void Main(string[] args)
@@ -31,15 +32,29 @@ Use:
         }
     }
 
+
+    // repository
+    
+    public class PersonRepository : RepositoryBase<Person>
+    {
+        public PersonRepository(string pathDbFile) : base(pathDbFile)
+        {
+        }
+    }
+
+
+
+    // entity
+
     public class Person
     {
         [PrimaryKey] // required
         [AutoIncrement] // optional
         public int Id { get; set; }
-        public bool IsDriver { get; set; }
         public string Name { get; set; }
+        public bool IsDriver { get; set; }
 
-        // required constructor with all properties
+        // required constructor with all properties in alphabetical order
         public Person(int id, bool isDriver, string name)
         {
             Id = id;
@@ -53,4 +68,5 @@ Use:
             Name = name;
         }
     }
-
+}
+```
