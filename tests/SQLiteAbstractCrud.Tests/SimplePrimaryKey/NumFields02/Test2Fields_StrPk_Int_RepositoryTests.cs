@@ -2,7 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests
+namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
 {
     public class Test2Fields_StrPk_Int_RepositoryTests
     {
@@ -94,11 +94,11 @@ namespace SQLiteAbstractCrud.Tests
             var entidade1 = new Teste2Campos_StrPk_Int(valorInt1, valor1);
             var entidade2 = new Teste2Campos_StrPk_Int(valorInt2, valor2);
             var entidade3 = new Teste2Campos_StrPk_Int(valorInt3, valor3);
-            
+
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
-            
+
             // act
-            sut.InsertBatch(new List<Teste2Campos_StrPk_Int>{ entidade1, entidade2, entidade3 });
+            sut.InsertBatch(new List<Teste2Campos_StrPk_Int> { entidade1, entidade2, entidade3 });
 
             // assert
             var entidadeInserida1 = sut.Get(valor1);

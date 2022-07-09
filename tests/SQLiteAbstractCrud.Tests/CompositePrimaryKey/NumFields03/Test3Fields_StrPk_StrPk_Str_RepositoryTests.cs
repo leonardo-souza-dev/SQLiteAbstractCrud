@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests
+namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields03
 {
     public class Test3Fields_StrPk_StrPk_Str_RepositoryTests
     {
@@ -49,7 +49,7 @@ namespace SQLiteAbstractCrud.Tests
             const string valorZab = "zabValor";
             var entidade = new Teste3Campos_StrPk_StrPk_Str(valorFoo, valorBar, valorZab);
             var sut = new Teste3Campos_StrPk_StrPk_Str_Repository(_caminhoArquivoDb);
-            
+
             // act
             sut.Insert(entidade);
 

@@ -2,7 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests
+namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields03
 {
     public class Test3Fields_StrPk_Int_Str_RepositoryTests
     {
@@ -50,7 +50,7 @@ namespace SQLiteAbstractCrud.Tests
             const string valorAsdfg = "qwerty";
             var entidade = new Teste3Campos_StrPk_Int_Str(valorFoo, valorBar, valorAsdfg);
             var sut = new Teste3Campos_StrPk_Int_Str_Repository(_caminhoArquivoDb);
-            
+
             // act
             sut.Insert(entidade);
 
@@ -78,11 +78,11 @@ namespace SQLiteAbstractCrud.Tests
             var entidade1 = new Teste3Campos_StrPk_Int_Str(valorStrPk1, valorInt1, valorStr1);
             var entidade2 = new Teste3Campos_StrPk_Int_Str(valorStrPk2, valorInt2, valorStr2);
             var entidade3 = new Teste3Campos_StrPk_Int_Str(valorStrPk3, valorInt3, valorStr3);
-            
+
             var sut = new Teste3Campos_StrPk_Int_Str_Repository(_caminhoArquivoDb);
-            
+
             // act
-            sut.InsertBatch(new List<Teste3Campos_StrPk_Int_Str>{ entidade1, entidade2, entidade3 });
+            sut.InsertBatch(new List<Teste3Campos_StrPk_Int_Str> { entidade1, entidade2, entidade3 });
 
             // assert
             var entidadeInserida1 = sut.Get(valorStrPk1);

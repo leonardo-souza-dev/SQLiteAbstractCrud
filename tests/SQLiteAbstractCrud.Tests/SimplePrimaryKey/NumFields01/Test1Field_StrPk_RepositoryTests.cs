@@ -1,11 +1,9 @@
-﻿
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests
+namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
 {
     public class Test1Field_StrPk_RepositoryTests
     {
@@ -47,7 +45,7 @@ namespace SQLiteAbstractCrud.Tests
             const string field1 = "fooValor";
             var entity = new Test1Field_StrPk(field1);
             var sut = new Test1Field_StrPk_Repository(_pathFileDb);
-            
+
             // act
             sut.Insert(entity);
 
@@ -66,7 +64,7 @@ namespace SQLiteAbstractCrud.Tests
             var sut = new Test1Field_StrPk_Repository(_pathFileDb);
             sut.Insert(entity1);
             sut.Insert(entity2);
-            
+
             // act
             var actual = sut.GetAll();
 
@@ -87,11 +85,11 @@ namespace SQLiteAbstractCrud.Tests
             var entity1 = new Test1Field_StrPk(value1);
             var entity2 = new Test1Field_StrPk(value2);
             var entity3 = new Test1Field_StrPk(value3);
-            
+
             var sut = new Test1Field_StrPk_Repository(_pathFileDb);
-            
+
             // act
-            sut.InsertBatch(new List<Test1Field_StrPk>{ entity1, entity2, entity3 });
+            sut.InsertBatch(new List<Test1Field_StrPk> { entity1, entity2, entity3 });
 
             // assert
             var insertedEntity1 = sut.Get(value1);

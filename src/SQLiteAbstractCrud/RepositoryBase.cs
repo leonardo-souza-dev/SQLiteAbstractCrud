@@ -413,11 +413,11 @@ namespace SQLiteAbstractCrud
             var hasFieldAutoincrement = _fields.Items.Any(x => x.IsAutoincrement);
 
             if (fieldPk == null || !fieldPk.Any())
-                throw new ApplicationException("Nao foi encontrada nenhuma Chave Primaria na entidade");
+                throw new ApplicationException("Can't find any primary key");
 
             if (fieldPk.Count > 1 && hasFieldAutoincrement)
-                throw new ApplicationException("Nao e possivel criar tabela com campo autoincrement como chave primaria dupla");
-            
+                throw new ApplicationException("Can't create table with autoincrement field and composite primary key");
+
             var queryCreate = $"CREATE TABLE if not exists {_table} ( {fieldsQuery} PRIMARY KEY({GetFieldsCommas(fieldPk)} {(hasFieldAutoincrement ? "AUTOINCREMENT" : "")}))";
             
             return queryCreate;

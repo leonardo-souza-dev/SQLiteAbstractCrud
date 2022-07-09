@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests
+namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
 {
     public class Test2Fields_DateTimePk_Bool_RepositoryTests
     {

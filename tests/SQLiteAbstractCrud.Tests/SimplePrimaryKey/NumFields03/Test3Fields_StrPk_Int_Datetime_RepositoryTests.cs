@@ -2,7 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests
+namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields03
 {
     public class Test3Fields_StrPk_Int_Datetime_RepositoryTests
     {
@@ -78,7 +78,7 @@ namespace SQLiteAbstractCrud.Tests
             var valorDateTime = new DateTime(1983, 3, 14);
             var entidade = new Test3Fields_StrPk_Int_Datetime(valorInt, valorDateTime, valorString);
             var sut = new Test3Fields_StrPk_Int_Datetime_Repository(_pathFileDb);
-            
+
             // act
             sut.Insert(entidade);
 

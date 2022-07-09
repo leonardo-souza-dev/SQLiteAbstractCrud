@@ -1,8 +1,7 @@
 ﻿using System.IO;
-
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests
+namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields05
 {
     public class Test5Fields_StrPk_Str_Str_Bool_Bool_RepositoryTests
     {

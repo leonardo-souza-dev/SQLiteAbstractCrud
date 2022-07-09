@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
-namespace SQLiteAbstractCrud.Tests
+namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
 {
     public class Test2Fields_IntPkAi_Int_RepositoryTests
     {
