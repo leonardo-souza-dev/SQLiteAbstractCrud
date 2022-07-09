@@ -32,8 +32,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="mydb.db" />
-    <Content Include="mydb.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 </Project>
