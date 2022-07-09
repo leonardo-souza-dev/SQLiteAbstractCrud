@@ -1,8 +1,9 @@
-namespace SQLiteAbstractCrud
-{
-    [System.AttributeUsage(System.AttributeTargets.Property)] 
-    public class AutoIncrementAttribute : System.Attribute
-    {
+using System;
 
-    }
+namespace SQLiteAbstractCrud;
+
+[AttributeUsage(AttributeTargets.Property)] 
+public sealed class AutoIncrementAttribute : System.Attribute
+{
+
 }

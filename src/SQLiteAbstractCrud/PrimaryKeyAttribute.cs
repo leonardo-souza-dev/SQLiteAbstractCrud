@@ -1,8 +1,9 @@
-namespace SQLiteAbstractCrud
-{
-    [System.AttributeUsage(System.AttributeTargets.Property)] 
-    public class PrimaryKeyAttribute : System.Attribute
-    {
+using System;
 
-    }
+namespace SQLiteAbstractCrud;
+
+[AttributeUsage(AttributeTargets.Property)] 
+public sealed class PrimaryKeyAttribute : Attribute
+{
+    
 }

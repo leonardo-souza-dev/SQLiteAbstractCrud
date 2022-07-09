@@ -4,16 +4,16 @@ namespace SQLiteAbstractCrud
 {
     internal class Field
     {
-        public string Name { get; private set; }
+        public string NameOnDb { get; private set; }
         internal string TypeCSharp { get; set; }
         public string TypeSQLite { get; private set; }
         public string Quote { get; private set; }
         public bool IsPrimaryKey { get; }
         public bool IsAutoincrement { get; }
 
-        public Field(string name, string typeCSharp)
+        public Field(string nameOnDb, string typeCSharp)
         {
-            CtorConfig(name, typeCSharp);
+            CtorConfig(nameOnDb, typeCSharp);
         }
         
         public Field(string name, string typeCSharp, bool isPrimaryKey, bool isAutoincrement)
@@ -24,9 +24,9 @@ namespace SQLiteAbstractCrud
             CtorConfig(name, typeCSharp);
         }
 
-        private void CtorConfig(string name, string typeCSharp)
+        private void CtorConfig(string nameOnDb, string typeCSharp)
         {
-            Name = name;
+            NameOnDb = nameOnDb;
             TypeCSharp = typeCSharp;
             
             switch(typeCSharp)

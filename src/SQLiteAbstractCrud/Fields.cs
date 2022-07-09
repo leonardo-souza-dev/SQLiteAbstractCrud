@@ -14,7 +14,7 @@ namespace SQLiteAbstractCrud
 
         public string GetPrimaryKeyName()
         {
-            return Items.First(x => x.IsPrimaryKey).Name;
+            return Items.First(x => x.IsPrimaryKey).NameOnDb;
         }
 
         public string GetQuotePrimaryKey()
