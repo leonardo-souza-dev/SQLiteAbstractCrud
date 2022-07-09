@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>netcoreapp6.0</TargetFramework>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Reference Include="SQLiteAbstractCrud">
+	    <HintPath>..\..\src\SQLiteAbstractCrud\bin\Debug\net6.0\SQLiteAbstractCrud.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<PackageReference Include="System.Data.SQLite" Version="1.0.115.5" />
+	</ItemGroup>
+</Project>
