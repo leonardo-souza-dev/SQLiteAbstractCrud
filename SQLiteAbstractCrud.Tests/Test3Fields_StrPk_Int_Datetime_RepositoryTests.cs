@@ -31,7 +31,7 @@ namespace SQLiteAbstractCrud.Tests
             const int valorInt = 123;
             var valorDateTime = new DateTime(2000, 11, 14);
             var sut = new Test3Fields_StrPk_Int_Datetime_Repository(_pathFileDb);
-            sut.Insert(new Test3Fields_StrPk_Int_Datetime(valorString, valorInt, valorDateTime));
+            sut.Insert(new Test3Fields_StrPk_Int_Datetime(valorInt, valorDateTime, valorString));
 
             // act
             var result = sut.Get(valorString);
@@ -57,9 +57,9 @@ namespace SQLiteAbstractCrud.Tests
             const int valorInt3 = 789;
             var valorDateTime3 = new DateTime(2020, 5, 17);
             var sut = new Test3Fields_StrPk_Int_Datetime_Repository(_pathFileDb);
-            sut.Insert(new Test3Fields_StrPk_Int_Datetime(valorString1, valorInt1, valorDateTime1));
-            sut.Insert(new Test3Fields_StrPk_Int_Datetime(valorString2, valorInt2, valorDateTime2));
-            sut.Insert(new Test3Fields_StrPk_Int_Datetime(valorString3, valorInt3, valorDateTime3));
+            sut.Insert(new Test3Fields_StrPk_Int_Datetime(valorInt1, valorDateTime1, valorString1));
+            sut.Insert(new Test3Fields_StrPk_Int_Datetime(valorInt2, valorDateTime2, valorString2));
+            sut.Insert(new Test3Fields_StrPk_Int_Datetime(valorInt3, valorDateTime3, valorString3));
 
             // act
             var result = sut.GetByDateRange("Data", new DateTime(2020, 3, 30), new DateTime(2021, 1, 1));
@@ -76,7 +76,7 @@ namespace SQLiteAbstractCrud.Tests
             const string valorString = "fooValor";
             const int valorInt = 123;
             var valorDateTime = new DateTime(1983, 3, 14);
-            var entidade = new Test3Fields_StrPk_Int_Datetime(valorString, valorInt, valorDateTime);
+            var entidade = new Test3Fields_StrPk_Int_Datetime(valorInt, valorDateTime, valorString);
             var sut = new Test3Fields_StrPk_Int_Datetime_Repository(_pathFileDb);
             
             // act
@@ -100,16 +100,16 @@ namespace SQLiteAbstractCrud.Tests
 
     public class Test3Fields_StrPk_Int_Datetime
     {
-        [PrimaryKey]
-        public string Foo { get; init; }
         public int Bar { get; init; }
         public DateTime Data { get; init; }
+        [PrimaryKey]
+        public string Foo { get; init; }
 
-        public Test3Fields_StrPk_Int_Datetime(string foo, int bar, DateTime data)
+        public Test3Fields_StrPk_Int_Datetime(int bar, DateTime data, string foo)
         {
-            Foo = foo;
             Bar = bar;
             Data = data;
+            Foo = foo;
         }
     }
 }

@@ -12,17 +12,18 @@ namespace SQLiteAbstractCrud
     public abstract class RepositoryBase<T> : IRepository<T>
     {
         private readonly string _table = typeof(T).Name;
-        private SQLiteConnection _con;
+        private readonly string _dataSource;
         private static Fields _fields;
 
         protected RepositoryBase(string pathDbFile)
         {
-            var dataSource = CreateDbFileIfDontExists(pathDbFile);
+            CreateDbFileIfDontExists(pathDbFile);
+            _dataSource = $"Data Source={pathDbFile}";
             SetFields();
 
             if (_fields != null)
             {
-                CreateTableIfDontExists(dataSource);
+                CreateTableIfDontExists(_dataSource);
             }
         }
 
@@ -32,70 +33,104 @@ namespace SQLiteAbstractCrud
 
         public virtual T Insert(T t)
         {
-            if (_con.State != ConnectionState.Open)
-                _con.Open();
+            object rawValue = null;
 
-            var queryValuesAdjust = GetValuesCommas(t, _fields);
-            var queryInsert = GetQueryInsert(queryValuesAdjust);
+            using (SQLiteConnection con = new(_dataSource))
+            { 
+                con.Open();
 
-            var cmd = new SQLiteCommand(queryInsert, _con);
-            cmd.ExecuteNonQuery();
-            
-            _con.Close();
-            
-            return t;
+                var queryValuesAdjust = GetValuesCommas(t, _fields);
+                var queryInsert = GetQueryInsert(queryValuesAdjust);
+
+                using (var cmd = new SQLiteCommand(queryInsert, con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                var pkName = _fields.GetPrimaryKeyName();
+
+                rawValue = t.GetType().GetProperty(pkName).GetValue(t, null);
+            }
+
+            var tInserted = Get(rawValue);
+            return tInserted;
+        }
+
+        private long GetLastInsertedId(SQLiteConnection con)
+        {
+            using (var cmd = new SQLiteCommand("SELECT last_insert_rowid()", con))
+            {
+                var foo = cmd.ExecuteScalar();
+                return (long)foo;
+            }
         }
 
         public virtual T Update(T t, string field, object value)
         {
-            if (_con.State != ConnectionState.Open)
-                _con.Open();
+            using (SQLiteConnection con = new(_dataSource))
+            {
+                con.Open();
 
-            var query = GetQueryUpdate(t, field, value);
+                var query = GetQueryUpdate(t, field, value);
 
-            var cmd = new SQLiteCommand(query, _con);
-            cmd.ExecuteNonQuery();
-
-            _con.Close();
+                using (var cmd = new SQLiteCommand(query, con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
 
             return t;
         }
 
         public virtual void InsertBatch(List<T> list)
         {
-            if (_con.State != ConnectionState.Open)
-                _con.Open();
+            if (!list.Any())
+                return;
 
-            var query = GetQueryInsertBatch(list);
-            new SQLiteCommand(query, _con).ExecuteNonQuery();
-            
-            _con.Close();
+            using (SQLiteConnection con = new(_dataSource))
+            {
+                con.Open();
+
+                var query = GetQueryInsertBatch(list);
+                using (var cmd = new SQLiteCommand(query, con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public virtual IEnumerable<T> GetAll()
         {
             List<T> entities = new();
 
-            if (_con.State != ConnectionState.Open)
-                _con.Open();
-
-            var query = GetQueryGetAll();
-
-            var cmd = new SQLiteCommand(query, _con);
-
-            using (var rdr = cmd.ExecuteReader())
+            using (SQLiteConnection con = new(_dataSource))
             {
-                if (rdr.HasRows)
-                {
-                    while (rdr.Read())
-                    {
-                        var entity = Map(rdr);
+                con.Open();
 
-                        entities.Add(entity);
+                var query = GetQueryGetAll();
+
+                using (var cmd = new SQLiteCommand(query, con))
+                {
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        if (rdr == null)
+                        {
+                            Debug.WriteLine("\r\n****\r\n rdr null");
+                            Debug.WriteLine(query);
+                        }
+
+                        if (rdr.HasRows)
+                        {
+                            while (rdr.Read())
+                            {
+                                var entity = Map(rdr);
+
+                                entities.Add(entity);
+                            }
+                        }
                     }
                 }
             }
-            _con.Close();
 
             return entities;
         }
@@ -104,22 +139,23 @@ namespace SQLiteAbstractCrud
         {
             T entity = default;
 
-            if (_con.State != ConnectionState.Open)
-                _con.Open();
-
-            var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
-            var query = GetQueryGet(fieldsNames, id);
-            var cmd = new SQLiteCommand(query, _con);
-
-            using (var rdr = cmd.ExecuteReader())
+            using (SQLiteConnection con = new(_dataSource))
             {
-                while (rdr.Read())
+                con.Open();
+
+                var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
+                var query = GetQueryGet(fieldsNames, id);
+                using (var cmd = new SQLiteCommand(query, con))
                 {
-                    entity = Map(rdr);
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            entity = Map(rdr);
+                        }
+                    }
                 }
             }
-
-            _con.Close();
 
             return entity;
         }
@@ -134,52 +170,57 @@ namespace SQLiteAbstractCrud
         public virtual List<T> GetByDateRange(string fieldName, DateTime minInclude, DateTime maxInclude)
         {
             T entity = default;
-
-            if (_con.State != ConnectionState.Open)
-                _con.Open();
-
-            var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
-            var query = GetQueryDateRange(fieldsNames, fieldName, minInclude, maxInclude);
-            var cmd = new SQLiteCommand(query, _con);
-
             var entities = new List<T>();
 
-            using (var rdr = cmd.ExecuteReader())
+            using (SQLiteConnection con = new(_dataSource))
             {
-                while (rdr.Read())
+                con.Open();
+
+                var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
+                var query = GetQueryDateRange(fieldsNames, fieldName, minInclude, maxInclude);
+                using (var cmd = new SQLiteCommand(query, con))
                 {
-                    entity = Map(rdr);
-                    entities.Add(entity);
+
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            entity = Map(rdr);
+                            entities.Add(entity);
+                        }
+                    }
                 }
             }
-
-            _con.Close();
 
             return entities;
         }
 
         public virtual void Delete(object id)
         {
-            if (_con.State != ConnectionState.Open)
-                _con.Open();
+            using (SQLiteConnection con = new(_dataSource))
+            {
+                con.Open();
 
-            var query = GetQueryDelete(id);
+                var query = GetQueryDelete(id);
 
-            var cmd = new SQLiteCommand(query, _con);
-            cmd.ExecuteNonQuery();
-
-            _con.Close();
+                using (var cmd = new SQLiteCommand(query, con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public virtual void DropTable()
         {
-            if (_con.State != ConnectionState.Open)
-                _con.Open();
+            using (SQLiteConnection con = new(_dataSource))
+            {
+                con.Open();
 
-            var cmd = new SQLiteCommand($"DROP TABLE {_table};", _con);
-            cmd.ExecuteNonQuery();
-
-            _con.Close();
+                using (var cmd = new SQLiteCommand($"DROP TABLE {_table};", con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         #region Private Methods
@@ -243,10 +284,10 @@ namespace SQLiteAbstractCrud
         {
             Console.WriteLine(Environment.NewLine);
             Console.WriteLine("1");
-            DateTime? chablau = null;
+            DateTime? valorDateTime = null;
             try
             {
-                chablau = (DateTime)valor;
+                valorDateTime = (DateTime)valor;
                 Console.WriteLine("2");
             }
             catch (Exception ex)
@@ -255,10 +296,10 @@ namespace SQLiteAbstractCrud
             }
 
             Console.WriteLine("4");
-            if (chablau.HasValue)
+            if (valorDateTime.HasValue)
             {
                 Console.WriteLine("5");
-                if (DateTime.TryParse(chablau.Value.ToString(), out DateTime dateValue))
+                if (DateTime.TryParse(valorDateTime.Value.ToString(), out DateTime dateValue))
                 {
                     Console.WriteLine("6");
                     return dateValue.Year + "-" + dateValue.Month.ToString().PadLeft(2, '0') + "-" + dateValue.Day.ToString().PadLeft(2, '0') + " " +
@@ -266,7 +307,7 @@ namespace SQLiteAbstractCrud
                 }
             }
             Console.WriteLine("7");
-            return valor.ToString();
+            return valor?.ToString();
         }
 
         private string GetQueryInsert(string queryValuesAdjust)
@@ -282,7 +323,7 @@ namespace SQLiteAbstractCrud
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            var set = " SET ";
+            var setSb = new StringBuilder(" SET ");
             var pkName = _fields.GetPrimaryKeyName();
             var propertyInfo = t.GetType().GetProperty(pkName);
             var pkValue = propertyInfo.GetValue(t, null);
@@ -307,12 +348,12 @@ namespace SQLiteAbstractCrud
 
             foreach (var campo in _fields.Items.Select(x => x.Name).Where(x => x.Equals(fieldName)))
             {
-                set += $"{campo} = {valueAdjust}, ";
+                setSb.Append($"{campo} = {valueAdjust}, ");
             }
-            set = set.Substring(0, set.Length - 2);
+            setSb.Remove(setSb.Length - 2, 2);
 
             var query = $"UPDATE {_table} " +
-                        $"{set} " +
+                        $"{setSb} " +
                         $"WHERE {pkName} = {_fields.GetQuotePrimaryKey()}{pkValueAdjust}{_fields.GetQuotePrimaryKey()} ;";
             return query;
         }
@@ -371,22 +412,22 @@ namespace SQLiteAbstractCrud
             var fieldPk = _fields.Items.Where(x => x.IsPrimaryKey).Select(x => x.Name).ToList();
             var hasFieldAutoincrement = _fields.Items.Any(x => x.IsAutoincrement);
 
-            if (fieldPk.Count > 1 && hasFieldAutoincrement)
-                throw new ApplicationException("Nao e possivel criar tabela com campo autoincrement como chave primaria dupla");
-
             if (fieldPk == null || !fieldPk.Any())
                 throw new ApplicationException("Nao foi encontrada nenhuma Chave Primaria na entidade");
+
+            if (fieldPk.Count > 1 && hasFieldAutoincrement)
+                throw new ApplicationException("Nao e possivel criar tabela com campo autoincrement como chave primaria dupla");
             
             var queryCreate = $"CREATE TABLE if not exists {_table} ( {fieldsQuery} PRIMARY KEY({GetFieldsCommas(fieldPk)} {(hasFieldAutoincrement ? "AUTOINCREMENT" : "")}))";
             
             return queryCreate;
         }
 
-        private void SetFields()
+        private static void SetFields()
         {
             _fields = new Fields();
             
-            foreach (var t in typeof(T).GetProperties())
+            foreach (var t in typeof(T).GetProperties().OrderBy(x => x.Name))
             {
                 var primaryKeyAttribute = t.GetCustomAttributes(typeof(PrimaryKeyAttribute), true);
                 var autoincrementAttribute = t.GetCustomAttributes(typeof(AutoIncrementAttribute), true);
@@ -395,7 +436,7 @@ namespace SQLiteAbstractCrud
             }
         }
         
-        private static string CreateDbFileIfDontExists(string dbFile)
+        private static void CreateDbFileIfDontExists(string dbFile)
         {
             if (!File.Exists(dbFile))
             {
@@ -409,31 +450,29 @@ namespace SQLiteAbstractCrud
 
                 SQLiteConnection.CreateFile(dbFile);
             }
-            
-            var dataSource = $"Data Source={dbFile}";
-            return dataSource;
         }
 
         private void CreateTableIfDontExists(string dataSource)
         {
-            _con = new SQLiteConnection(dataSource);
+            using (var con = new SQLiteConnection(dataSource))
+            {
+                con.Open();
 
-            if (_con.State != ConnectionState.Open)
-                _con.Open();
-            
-            var cmdCreateTable = new SQLiteCommand(GetQueryCreate(), _con);
-            cmdCreateTable.ExecuteNonQuery();
-            _con.Close();
+                using (var cmd = new SQLiteCommand(GetQueryCreate(), con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         private string GetQueryGet(List<string> fieldsNames, object value)
         {
-            return $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {GetPrimaryKeyName()} = {GetQueryWhere(value)}";
+            return $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {_fields.GetPrimaryKeyName()} = {GetQueryWhere(value)}";
         }
 
         private string GetQueryDateRange(List<string> fieldsNames, string fieldName, DateTime paramMin, DateTime paramMax)
         {
-            var query = $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {fieldName} >= '{paramMin:yyyy-MM-dd HH:mm:ss.fff}' AND {fieldName} <= '{paramMax:yyyy-MM-dd HH:mm:ss.fff}'";
+            var query = $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE DATE({fieldName}) >= DATE('{paramMin:yyyy-MM-dd HH:mm:ss.fff}') AND DATE({fieldName}) <= DATE('{paramMax:yyyy-MM-dd HH:mm:ss.fff}') ";
             
             return query;
         }
@@ -446,12 +485,7 @@ namespace SQLiteAbstractCrud
             return $"{quotePk}{pkValueAdjust}{quotePk}";
         }
 
-        private string GetPrimaryKeyName()
-        {
-            return _fields.GetPrimaryKeyName();
-        }
-
-        private T Map(IDataRecord rdr)
+        private static T Map(IDataRecord rdr)
         {
             var fieldsCount = _fields.Items.Count;
             

@@ -36,9 +36,9 @@ namespace SQLiteAbstractCrud.Tests
 
             // assert
             Assert.NotNull(result);
-            Assert.AreEqual(valorFoo, result.Foo);
+            Assert.AreEqual(valorFoo, result.Abc);
             Assert.AreEqual(valorBar, result.Bar);
-            Assert.AreEqual(valorAsdfg, result.Asdfg);
+            Assert.AreEqual(valorAsdfg, result.Cde);
         }
 
         [Test]
@@ -57,9 +57,9 @@ namespace SQLiteAbstractCrud.Tests
             // assert
             var entidadeInserida = sut.Get(valorFoo);
             Assert.NotNull(entidadeInserida);
-            Assert.AreEqual(valorFoo, entidadeInserida.Foo);
+            Assert.AreEqual(valorFoo, entidadeInserida.Abc);
             Assert.AreEqual(valorBar, entidadeInserida.Bar);
-            Assert.AreEqual(valorAsdfg, entidadeInserida.Asdfg);
+            Assert.AreEqual(valorAsdfg, entidadeInserida.Cde);
         }
 
         [Test]
@@ -91,32 +91,32 @@ namespace SQLiteAbstractCrud.Tests
             Assert.NotNull(entidadeInserida1);
             Assert.NotNull(entidadeInserida2);
             Assert.NotNull(entidadeInserida3);
-            Assert.AreEqual(valorStrPk1, entidade1.Foo);
-            Assert.AreEqual(valorStrPk2, entidade2.Foo);
-            Assert.AreEqual(valorStrPk3, entidade3.Foo);
+            Assert.AreEqual(valorStrPk1, entidade1.Abc);
+            Assert.AreEqual(valorStrPk2, entidade2.Abc);
+            Assert.AreEqual(valorStrPk3, entidade3.Abc);
         }
 
         [Test]
         public void QuandoEntidadeTiverUmCampoStringOutroIntOutroString_DeveAtualizar()
         {
             // arrange
-            const string valorFoo = "fooValor";
-            const int valorBar = 123;
-            const string valorAsdfg = "qwerty";
-            const string valorAsdfgNovo = "outro";
-            var entidade = new Teste3Campos_StrPk_Int_Str(valorFoo, valorBar, valorAsdfg);
+            const string valorString = "valorString";
+            const int valorInt = 123;
+            const string valorString2 = "valorString2";
+            const string valorString2Novo = "valorString2novo";
+            var entidade = new Teste3Campos_StrPk_Int_Str(valorString, valorInt, valorString2);
             var sut = new Teste3Campos_StrPk_Int_Str_Repository(_caminhoArquivoDb);
             sut.Insert(entidade);
 
             // act
-            _ = sut.Update(entidade, "Asdfg", valorAsdfgNovo);
+            _ = sut.Update(entidade, "Cde", valorString2Novo);
 
             // assert
-            var entidadeAtualizada = sut.Get(valorFoo);
+            var entidadeAtualizada = sut.Get(valorString);
             Assert.NotNull(entidadeAtualizada);
-            Assert.AreEqual(valorFoo, entidadeAtualizada.Foo);
-            Assert.AreEqual(valorBar, entidadeAtualizada.Bar);
-            Assert.AreEqual(valorAsdfgNovo, entidadeAtualizada.Asdfg);
+            Assert.AreEqual(valorString, entidadeAtualizada.Abc);
+            Assert.AreEqual(valorInt, entidadeAtualizada.Bar);
+            Assert.AreEqual(valorString2Novo, entidadeAtualizada.Cde);
         }
     }
 
@@ -130,15 +130,15 @@ namespace SQLiteAbstractCrud.Tests
     public class Teste3Campos_StrPk_Int_Str
     {
         [PrimaryKey]
-        public string Foo { get; init; }
+        public string Abc { get; init; }
         public int Bar { get; init; }
-        public string Asdfg { get; init; }
+        public string Cde { get; init; }
 
-        public Teste3Campos_StrPk_Int_Str(string foo, int bar, string asdfg)
+        public Teste3Campos_StrPk_Int_Str(string abc, int bar, string cde)
         {
-            Foo = foo;
+            Abc = abc;
             Bar = bar;
-            Asdfg = asdfg;
+            Cde = cde;
         }
     }
 }

@@ -35,9 +35,9 @@ namespace SQLiteAbstractCrud.Tests
 
             // assert
             Assert.NotNull(result);
-            Assert.AreEqual(valorFoo, result.Foo);
+            Assert.AreEqual(valorFoo, result.Abc);
             Assert.AreEqual(valorBar, result.Bar);
-            Assert.AreEqual(valorZab, result.Zab);
+            Assert.AreEqual(valorZab, result.Cde);
         }
 
         [Test]
@@ -56,9 +56,9 @@ namespace SQLiteAbstractCrud.Tests
             // assert
             var entidadeInserida = sut.Get(valorFoo);
             Assert.NotNull(entidadeInserida);
-            Assert.AreEqual(valorFoo, entidadeInserida.Foo);
+            Assert.AreEqual(valorFoo, entidadeInserida.Abc);
             Assert.AreEqual(valorBar, entidadeInserida.Bar);
-            Assert.AreEqual(valorZab, entidadeInserida.Zab);
+            Assert.AreEqual(valorZab, entidadeInserida.Cde);
         }
     }
 
@@ -72,16 +72,16 @@ namespace SQLiteAbstractCrud.Tests
     public class Teste3Campos_StrPk_StrPk_Str
     {
         [PrimaryKey]
-        public string Foo { get; init; }
+        public string Abc { get; init; }
         [PrimaryKey]
         public string Bar { get; init; }
-        public string Zab { get; init; }
+        public string Cde { get; init; }
 
-        public Teste3Campos_StrPk_StrPk_Str(string foo, string bar, string zab)
+        public Teste3Campos_StrPk_StrPk_Str(string abc, string bar, string cde)
         {
-            Foo = foo;
+            Abc = abc;
             Bar = bar;
-            Zab = zab;
+            Cde = cde;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace SQLiteAbstractCrud.Tests
             const string valorFoo = "fooValor";
             const int valorBar = 123;
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
-            sut.Insert(new Teste2Campos_StrPk_Int(valorFoo, valorBar));
+            sut.Insert(new Teste2Campos_StrPk_Int(valorBar, valorFoo));
 
             // act
             var result = sut.Get(valorFoo);
@@ -47,7 +47,7 @@ namespace SQLiteAbstractCrud.Tests
             // arrange
             const string valorFoo = "fooValor";
             const int valorBar = 123;
-            var entidade = new Teste2Campos_StrPk_Int(valorFoo, valorBar);
+            var entidade = new Teste2Campos_StrPk_Int(valorBar, valorFoo);
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
 
             // act
@@ -66,7 +66,7 @@ namespace SQLiteAbstractCrud.Tests
             // arrange
             const string valorFoo = "fooValor";
             const int valorBar = 124;
-            var entidade = new Teste2Campos_StrPk_Int(valorFoo, valorBar);
+            var entidade = new Teste2Campos_StrPk_Int(valorBar, valorFoo);
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
             sut.Insert(entidade);
             var novoValorBar = 445;
@@ -91,9 +91,9 @@ namespace SQLiteAbstractCrud.Tests
             var valorInt1 = 1;
             var valorInt2 = 2;
             var valorInt3 = 3;
-            var entidade1 = new Teste2Campos_StrPk_Int(valor1, valorInt1);
-            var entidade2 = new Teste2Campos_StrPk_Int(valor2, valorInt2);
-            var entidade3 = new Teste2Campos_StrPk_Int(valor3, valorInt3);
+            var entidade1 = new Teste2Campos_StrPk_Int(valorInt1, valor1);
+            var entidade2 = new Teste2Campos_StrPk_Int(valorInt2, valor2);
+            var entidade3 = new Teste2Campos_StrPk_Int(valorInt3, valor3);
             
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
             
@@ -122,11 +122,11 @@ namespace SQLiteAbstractCrud.Tests
 
     public class Teste2Campos_StrPk_Int
     {
+        public int Bar { get; }
         [PrimaryKey]
         public string Foo { get; }
-        public int Bar { get; }
 
-        public Teste2Campos_StrPk_Int(string foo, int bar)
+        public Teste2Campos_StrPk_Int(int bar, string foo)
         {
             Foo = foo;
             Bar = bar;
