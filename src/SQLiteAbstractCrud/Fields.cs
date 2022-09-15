@@ -17,6 +17,11 @@ namespace SQLiteAbstractCrud
             return Items.First(x => x.IsPrimaryKey).Name;
         }
 
+        public IEnumerable<Field> GetPrimariesKeys()
+        {
+            return Items.Where(x => x.IsPrimaryKey);
+        }
+
         public string GetQuotePrimaryKey()
         {
             return Items.First(x => x.IsPrimaryKey).Quote;

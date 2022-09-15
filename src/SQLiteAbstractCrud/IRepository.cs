@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SQLiteAbstractCrud
@@ -11,5 +12,7 @@ namespace SQLiteAbstractCrud
         T Get(object id);
         void Delete(object id);
         void DropTable();
+        List<T> GetByDateRange(string fieldName, DateTime minInclude, DateTime maxInclude);
+        void Delete(object id1, object id2);
     }
 }
