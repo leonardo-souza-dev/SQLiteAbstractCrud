@@ -160,6 +160,31 @@ namespace SQLiteAbstractCrud
             return entity;
         }
 
+        public virtual T Get(object id1, object id2)
+        {
+            T entity = default;
+
+            using (SQLiteConnection con = new(_dataSource))
+            {
+                con.Open();
+
+                var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
+                var query = GetQueryGetComposite(fieldsNames, id1, id2);
+                using (var cmd = new SQLiteCommand(query, con))
+                {
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            entity = Map(rdr);
+                        }
+                    }
+                }
+            }
+
+            return entity;
+        }
+
         /// <summary>
         /// Get records by date (GTE and LTE)
         /// </summary>
@@ -295,13 +320,17 @@ namespace SQLiteAbstractCrud
 
         private string GetQueryDeleteComposite(object value1, object value2)
         {
+            return $"DELETE FROM {_table} {GetWhereComposite(value1, value2)}";
+        }
+
+        private static string GetWhereComposite(object value1, object value2)
+        {
             var queryWhere = "";
             var pks = _fields.GetPrimariesKeys().ToList();
-            
             queryWhere += $"WHERE {pks[0].Name} = {pks[0].Quote}{value1.GetValue()}{pks[0].Quote} AND {pks[1].Name} = {pks[1].Quote}{value2.GetValue()}{pks[1].Quote}";
-                    
-            return $"DELETE FROM {_table} {queryWhere}";
-        }        
+
+            return queryWhere;
+        }
 
         private string GetQueryInsert(string queryValuesAdjust)
         {
@@ -461,6 +490,11 @@ namespace SQLiteAbstractCrud
         private string GetQueryGet(List<string> fieldsNames, object value)
         {
             return $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {_fields.GetPrimaryKeyName()} = {GetQueryWhere(value)}";
+        }
+
+        private string GetQueryGetComposite(List<string> fieldsNames, object value1, object value2)
+        {
+            return $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} {GetWhereComposite(value1, value2)}";
         }
 
         private string GetQueryDateRange(List<string> fieldsNames, string fieldName, DateTime paramMin, DateTime paramMax)

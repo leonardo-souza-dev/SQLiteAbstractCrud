@@ -33,6 +33,28 @@ namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields02
             var all = sut.GetAll();
             Assert.False(all.Any(x => x.IntField == intValue && x.StringField == stringValue));
         }
+
+        [Test]
+        public void MustGet()
+        {
+            // arrange
+            var intField = 1;
+            var stringFiled = "10";
+            var sut = new Test2Fields_IntPk_StrPk_Repository(_pathFileDb);
+            sut.InsertBatch(new List<Test2Fields_IntPk_StrPk>
+            {
+                new Test2Fields_IntPk_StrPk(intField, stringFiled),
+                new Test2Fields_IntPk_StrPk(2, "20"),
+            });
+
+            // act
+            var actual = sut.Get(1, 10);
+
+            // assert
+            Assert.NotNull(actual);
+            Assert.AreEqual(intField, actual.IntField);
+            Assert.AreEqual(stringFiled, actual.StringField);
+        }
     }
 
     public class Test2Fields_IntPk_StrPk_Repository : RepositoryBase<Test2Fields_IntPk_StrPk>

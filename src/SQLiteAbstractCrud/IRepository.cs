@@ -10,6 +10,7 @@ namespace SQLiteAbstractCrud
         T Update(T t, string field, object value);
         IEnumerable<T> GetAll();
         T Get(object id);
+        T Get(object id1, object id2);
         void Delete(object id);
         void DropTable();
         List<T> GetByDateRange(string fieldName, DateTime minInclude, DateTime maxInclude);
