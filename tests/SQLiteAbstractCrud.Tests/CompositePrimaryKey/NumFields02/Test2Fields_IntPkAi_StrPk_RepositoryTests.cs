@@ -18,7 +18,7 @@ namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields02
         public void WhenEntityHasOneFieldIntPkAiAndCompositePk_MustThrowException()
         {
             // arrange, act & assert
-            Assert.Throws<ApplicationException>(() => new Test2Fields_IntPkAi_StrPk_Repository(_pathFileDb));
+            Assert.Throws<AggregateException>(() => new Test2Fields_IntPkAi_StrPk_Repository(_pathFileDb));
         }
     }
 
