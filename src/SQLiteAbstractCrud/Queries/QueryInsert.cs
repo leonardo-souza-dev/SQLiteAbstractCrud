@@ -12,10 +12,10 @@ namespace SQLiteAbstractCrud.Queries
 
         public override string ToRaw()
         {
-            var queryValuesAdjust = GetValuesCommas(_type, _proxy.Fields);
+            var queryValuesAdjust = GetValuesCommas(_type, _fields);
 
             var query = $"INSERT OR REPLACE INTO {this.TableName} " +
-                        $"({GetFieldsCommasFields(_proxy.Fields.Items.Where(x => !x.IsAutoincrement).ToList())}) " +
+                        $"({GetFieldsCommasFields(_fields.Items.Where(x => !x.IsAutoincrement).ToList())}) " +
                         $"VALUES ({queryValuesAdjust});";
 
             return query;

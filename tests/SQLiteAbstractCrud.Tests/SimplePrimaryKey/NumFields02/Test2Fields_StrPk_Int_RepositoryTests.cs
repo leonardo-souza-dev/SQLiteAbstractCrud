@@ -12,8 +12,8 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         public void Init()
         {
             _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
-            var repo = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
-            repo.DropTable();
+            var repository = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
+            repository.DropTable();
         }
 
         [TearDown]
@@ -27,57 +27,57 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         public void MustGet()
         {
             // arrange
-            const string valorFoo = "fooValor";
-            const int valorBar = 123;
+            const string stringValue = "fooValor";
+            const int intValue = 123;
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
-            sut.Insert(new Test2Fields_StrPk_Int(valorBar, valorFoo));
+            sut.Insert(new Test2Fields_StrPk_Int(intValue, stringValue));
 
             // act
-            var result = sut.Get(valorFoo);
+            var result = sut.Get(stringValue);
 
             // assert
             Assert.NotNull(result);
-            Assert.AreEqual(valorFoo, result.Foo);
-            Assert.AreEqual(valorBar, result.Bar);
+            Assert.AreEqual(stringValue, result.Foo);
+            Assert.AreEqual(intValue, result.Bar);
         }
 
         [Test]
         public void MustInsert()
         {
             // arrange
-            const string valorFoo = "fooValor";
-            const int valorBar = 123;
-            var entidade = new Test2Fields_StrPk_Int(valorBar, valorFoo);
+            const string stringValue = "fooValor";
+            const int intValue = 123;
+            var entity = new Test2Fields_StrPk_Int(intValue, stringValue);
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
 
             // act
-            sut.Insert(entidade);
+            sut.Insert(entity);
 
             // assert
-            var entidadeInserida = sut.Get(valorFoo);
+            var entidadeInserida = sut.Get(stringValue);
             Assert.NotNull(entidadeInserida);
-            Assert.AreEqual(valorFoo, entidadeInserida.Foo);
-            Assert.AreEqual(valorBar, entidadeInserida.Bar);
+            Assert.AreEqual(stringValue, entidadeInserida.Foo);
+            Assert.AreEqual(intValue, entidadeInserida.Bar);
         }
 
         [Test]
         public void MustUpdate()
         {
             // arrange
-            const string valorFoo = "fooValor";
-            const int valorBar = 124;
-            var entidade = new Test2Fields_StrPk_Int(valorBar, valorFoo);
+            const string stringValue = "fooValor";
+            const int intValue = 124;
+            var entity = new Test2Fields_StrPk_Int(intValue, stringValue);
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
-            sut.Insert(entidade);
+            sut.Insert(entity);
             var novoValorBar = 445;
 
             // act
-            _ = sut.Update(entidade, "Bar", novoValorBar);
+            _ = sut.Update(entity, "Bar", novoValorBar);
 
             // assert
-            var entidadeInserida = sut.Get(valorFoo);
+            var entidadeInserida = sut.Get(stringValue);
             Assert.NotNull(entidadeInserida);
-            Assert.AreEqual(valorFoo, entidadeInserida.Foo);
+            Assert.AreEqual(stringValue, entidadeInserida.Foo);
             Assert.AreEqual(novoValorBar, entidadeInserida.Bar);
         }
 

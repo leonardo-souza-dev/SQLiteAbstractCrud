@@ -9,7 +9,7 @@ namespace AbstractCrud
     {
         static void Main(string[] args)
         {
-            PersonRepository personRepository = new PersonRepository("./my-db.db");
+            PersonRepository personRepository = new ("./my-db.db");
 
             Console.WriteLine("Simple insert");
             personRepository.Insert(new Person(false, "Bob"));

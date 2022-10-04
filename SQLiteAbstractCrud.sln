@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteAbstractCrud", "src\S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteAbstractCrud.Tests", "tests\SQLiteAbstractCrud.Tests\SQLiteAbstractCrud.Tests.csproj", "{7AF0CB98-E3A0-4C11-8030-CCE333F1E326}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteAbstractCrud.Proxy", "SQLiteAbstractCrud.Proxy\SQLiteAbstractCrud.Proxy.csproj", "{3363EB82-F4B4-4F1A-AB8B-6EFE52995C11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AbstractCrud", "samples\AbstractCrud\AbstractCrud.csproj", "{D12D818D-F419-4B69-9EDD-EFBE51282761}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{7AF0CB98-E3A0-4C11-8030-CCE333F1E326}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AF0CB98-E3A0-4C11-8030-CCE333F1E326}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AF0CB98-E3A0-4C11-8030-CCE333F1E326}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3363EB82-F4B4-4F1A-AB8B-6EFE52995C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3363EB82-F4B4-4F1A-AB8B-6EFE52995C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3363EB82-F4B4-4F1A-AB8B-6EFE52995C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3363EB82-F4B4-4F1A-AB8B-6EFE52995C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D12D818D-F419-4B69-9EDD-EFBE51282761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D12D818D-F419-4B69-9EDD-EFBE51282761}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D12D818D-F419-4B69-9EDD-EFBE51282761}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D12D818D-F419-4B69-9EDD-EFBE51282761}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

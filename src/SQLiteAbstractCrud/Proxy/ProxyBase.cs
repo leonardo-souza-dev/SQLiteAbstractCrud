@@ -16,19 +16,20 @@ namespace SQLiteAbstractCrud.Proxy
         public ProxyBase(Type type)
         {
             this._type = type;
+            var properties = this._type.GetProperties().ToList();
             
             int i = 0;
-            this._type.GetProperties().ToList().ForEach(x =>
+            properties.ForEach(x =>
             {
                 _originalPropertiesInfos.Add(new OriginalPropertyInfo(i, x.Name));
                 i++;
             });
 
             int j = 0;
-            this._type.GetProperties().OrderBy(x => x.Name).ToList().ForEach(x =>
+            properties.OrderBy(x => x.Name).ToList().ForEach(x =>
             {
                 var originalOrder = _originalPropertiesInfos.First(y => y.Name == x.Name).Order;
-                _proxyPropertiesInfos.Add(new ProxyPropertyInfo(originalOrder, x, 0));
+                _proxyPropertiesInfos.Add(new ProxyPropertyInfo(originalOrder, x, j));
                 j++;
             });
 
