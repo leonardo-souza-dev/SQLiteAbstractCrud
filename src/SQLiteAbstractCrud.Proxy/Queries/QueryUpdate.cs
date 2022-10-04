@@ -22,8 +22,8 @@ namespace SQLiteAbstractCrud.Proxy.Queries
 
             var setSb = new StringBuilder(" SET ");
             var pkName = _proxyBase.Fields.GetPrimaryKeyName();
-            var propertyInfo = _type.GetType().GetProperty(pkName);
-            var pkValue = propertyInfo.GetValue(_type, null);
+            
+            var pkValue = GetRawValue(pkName);
 
             var pkValueAdjust = AdjustPkValueToQuery(pkValue);
 

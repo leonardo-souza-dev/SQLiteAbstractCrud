@@ -12,7 +12,7 @@ namespace SQLiteAbstractCrud.Proxy.Queries
 
         public override string ToRaw()
         {
-            var queryValuesAdjust = GetValuesCommas(_type, _proxyBase.Fields);
+            var queryValuesAdjust = GetValuesCommas(_proxyBase.Fields);
 
             var query = $"INSERT OR REPLACE INTO {this.TableName} " +
                         $"({GetFieldsCommasFields(_proxyBase.Fields.Items.Where(x => !x.IsAutoincrement).ToList())}) " +
@@ -21,13 +21,13 @@ namespace SQLiteAbstractCrud.Proxy.Queries
             return query;
         }
 
-        private static string GetValuesCommas(T t, Fields fields)
+        private string GetValuesCommas(Fields fields)
         {
             var queryValuesAdjust = "";
             var queryValues = "";
             foreach (var field in fields.Items.Where(x => !x.IsAutoincrement))
             {
-                var rawValue = t.GetType().GetProperty(field.NameOnDb).GetValue(t, null);
+                var rawValue = GetRawValue(field.NameOnDb);
                 object value = field.TypeCSharp switch
                 {
                     "DateTime" => Util.Convert.SqliteDate((DateTime)rawValue),

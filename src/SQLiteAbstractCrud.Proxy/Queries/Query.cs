@@ -1,10 +1,12 @@
 using SQLiteAbstractCrud.Proxy;
+using System.Reflection;
+using System.Xml.Linq;
 
 namespace SQLiteAbstractCrud.Proxy.Queries
 {
     public abstract class Query<T>
     {
-        public readonly T _type;
+        private readonly T _type;
         internal readonly ProxyBase _proxyBase;
 
         public string Raw => ToRaw(); 
@@ -17,5 +19,20 @@ namespace SQLiteAbstractCrud.Proxy.Queries
         }
 
         public abstract string ToRaw();
+
+        public PropertyInfo GetPropertyInfo(string property)
+        {
+            return _type.GetType().GetProperty(property);
+        }
+
+        public object GetRawValue(string fieldName)
+        {
+            return _type.GetType().GetProperty(fieldName).GetValue(_type, null);
+        }
+
+        public object GetPkValue(string fieldName)
+        {
+            return _type.GetType().GetProperty(fieldName).GetValue(_type, null);
+        }
     }
 }
