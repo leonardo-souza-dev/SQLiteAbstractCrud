@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using SQLiteAbstractCrud.Proxy.Attributes;
 using SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields03;
 
 namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields02

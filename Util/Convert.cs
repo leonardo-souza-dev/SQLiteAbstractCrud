@@ -1,7 +1,7 @@
-using System;
 using System.Globalization;
+using System;
 
-namespace SQLiteAbstractCrud
+namespace Util
 {
     public static class Convert
     {

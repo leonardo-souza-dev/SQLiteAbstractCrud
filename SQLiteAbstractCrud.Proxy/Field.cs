@@ -1,11 +1,10 @@
 using System;
 
-namespace SQLiteAbstractCrud
+namespace SQLiteAbstractCrud.Proxy
 {
     public class Field
     {
         public string NameOnDb { get; private set; }
-        //public string Name { get; private set; }
         internal string TypeCSharp { get; set; }
         public string TypeSQLite { get; private set; }
         public string Quote { get; private set; }

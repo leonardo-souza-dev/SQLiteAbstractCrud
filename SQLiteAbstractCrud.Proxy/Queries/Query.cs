@@ -1,11 +1,11 @@
 using SQLiteAbstractCrud.Proxy;
 
-namespace SQLiteAbstractCrud.Queries
+namespace SQLiteAbstractCrud.Proxy.Queries
 {
     public abstract class Query<T>
     {
         public readonly T _type;
-        public readonly Fields _fields;
+        internal readonly ProxyBase _proxyBase;
 
         public string Raw => ToRaw(); 
         public string TableName => typeof(T).Name;
@@ -13,7 +13,7 @@ namespace SQLiteAbstractCrud.Queries
         public Query(T type)
         {
             this._type = type;
-            this._fields = new ProxyBase(typeof(T)).Fields;
+            this._proxyBase = new ProxyBase(typeof(T));
         }
 
         public abstract string ToRaw();

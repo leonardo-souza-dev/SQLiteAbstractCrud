@@ -1,5 +1,5 @@
 ﻿using SQLiteAbstractCrud.Proxy;
-using SQLiteAbstractCrud.Queries;
+using SQLiteAbstractCrud.Proxy.Queries;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +7,6 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SQLiteAbstractCrud
 {
@@ -22,8 +21,7 @@ namespace SQLiteAbstractCrud
             CreateDbFileIfDontExists(pathDbFile);
             _dataSource = $"Data Source={pathDbFile}";
             
-            CreateTableIfDontExists(_dataSource);
-            
+            CreateTableIfDontExists(_dataSource);            
         }
 
         protected RepositoryBase()
@@ -45,7 +43,7 @@ namespace SQLiteAbstractCrud
                     cmd.ExecuteNonQuery();
                 }
 
-                var pkName = _proxyBase.Fields.GetPrimaryKeyName();
+                var pkName = _proxyBase.GetPrimaryKeyName();
 
                 rawValue = t.GetType().GetProperty(pkName).GetValue(t, null);
             }
@@ -89,7 +87,8 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                var query = GetQueryInsertBatch(list);
+                var query = new QueryInsertBatch<T>(list).Raw;
+
                 using (var cmd = new SQLiteCommand(query, con))
                 {
                     cmd.ExecuteNonQuery();
@@ -105,7 +104,7 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                var query = GetQueryGetAll();
+                var query = new QueryGetAll<T>().Raw;
 
                 using (var cmd = new SQLiteCommand(query, con))
                 {
@@ -141,8 +140,8 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                var fieldsNames = _proxyBase.Fields.Items.Select(x => x.NameOnDb).ToList();
-                var query = GetQueryGet(fieldsNames, id);
+                var query = new QueryGet<T>(id).Raw;
+
                 using (var cmd = new SQLiteCommand(query, con))
                 {
                     using (var rdr = cmd.ExecuteReader())
@@ -166,8 +165,10 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                var fieldsNames = _proxyBase.Fields.Items.Select(x => x.NameOnDb).ToList();
-                var query = GetQueryGetComposite(fieldsNames, id1, id2);
+                var fieldsNames = _proxyBase.GetFieldsNames();
+
+                var query = new QueryGetComposite<T>(id1, id2).Raw;
+
                 using (var cmd = new SQLiteCommand(query, con))
                 {
                     using (var rdr = cmd.ExecuteReader())
@@ -199,8 +200,8 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                var fieldsNames = _proxyBase.Fields.Items.Select(x => x.NameOnDb).ToList();
-                var query = GetQueryDateRange(fieldsNames, fieldName, minInclude, maxInclude);
+                var query = new QueryGetByDateRange<T>(fieldName, minInclude, maxInclude).Raw;
+
                 using (var cmd = new SQLiteCommand(query, con))
                 {
 
@@ -224,7 +225,7 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                var query = GetQueryDelete(id);
+                var query = new QueryDelete<T>(id).Raw;
 
                 using (var cmd = new SQLiteCommand(query, con))
                 {
@@ -232,13 +233,14 @@ namespace SQLiteAbstractCrud
                 }
             }
         }
+
         public void Delete(object id1, object id2)
         {
             using (SQLiteConnection con = new(_dataSource))
             {
                 con.Open();
 
-                var query = GetQueryDeleteComposite(id1, id2);
+                var query = new QueryDeleteComposite<T>(id1, id2).Raw;
 
                 using (var cmd = new SQLiteCommand(query, con))
                 {
@@ -261,187 +263,6 @@ namespace SQLiteAbstractCrud
         }
 
         #region Private Methods
-
-        private static string GetValuesCommas(T t, Fields fields)
-        {
-            var queryValuesAdjust = "";
-            var queryValues = "";
-            foreach (var field in fields.Items.Where(x => !x.IsAutoincrement))
-            {
-                var rawValue = t.GetType().GetProperty(field.NameOnDb).GetValue(t, null);
-                object value = "";
-                switch (field.TypeCSharp)
-                {
-                    case "DateTime":
-                        value = Convert.SqliteDate((DateTime)rawValue);
-                        break;
-                    case "Boolean":
-                        value = ((bool)rawValue) ? 1 : 0;
-                        break;
-                    default:
-                        value = rawValue.ToString().Replace('"', '\'').Replace("'", "''");
-                        break;
-                }
-                
-                queryValues += $"{field.Quote}{value}{field.Quote},";
-            }
-            queryValuesAdjust = queryValues.Substring(0, queryValues.Length - 1);
-
-            return queryValuesAdjust;
-        }
-        
-        private string GetQueryInsertBatch(List<T> entities)
-        {
-            var sb = new StringBuilder();
-    
-            entities.ForEach(entity =>
-            {
-                var valuesCommas = GetValuesCommas(entity, _proxyBase.Fields);
-
-                sb.Append($"({valuesCommas}), ");
-            });
-    
-            var repositoriosValue = sb.ToString().Substring(0, sb.Length - 2);
-
-            var fieldsCommas = GetFieldsCommasFields(_proxyBase.Fields.Items.Where(x => !x.IsAutoincrement).ToList());
-
-            var query = $"INSERT OR REPLACE INTO {_table} ({fieldsCommas}) VALUES {repositoriosValue};";
-            
-            return query;
-        }
-        
-        private string GetQueryDelete(object value)
-        {
-            var query = $"DELETE FROM {_table} WHERE {_proxyBase.Fields.GetPrimaryKeyName()} = {_proxyBase.Fields.GetQuotePrimaryKey()}{value.GetValue()}{_proxyBase.Fields.GetQuotePrimaryKey()};";
-            return query;
-        }
-
-        private string GetQueryDeleteComposite(object value1, object value2)
-        {
-            return $"DELETE FROM {_table} {GetWhereComposite(value1, value2)}";
-        }
-
-        private string GetWhereComposite(object value1, object value2)
-        {
-            var queryWhere = "";
-            var pks = _proxyBase.Fields.GetPrimariesKeys().ToList();
-            queryWhere += $"WHERE {pks[0].NameOnDb} = {pks[0].Quote}{value1.GetValue()}{pks[0].Quote} AND {pks[1].NameOnDb} = {pks[1].Quote}{value2.GetValue()}{pks[1].Quote}";
-
-            return queryWhere;
-        }
-
-        private string GetQueryInsert(string queryValuesAdjust)
-        {
-            var query = $"INSERT OR REPLACE INTO {_table} " +
-                        $"({GetFieldsCommasFields(_proxyBase.Fields.Items.Where(x => !x.IsAutoincrement).ToList())}) " +
-                        $"VALUES ({queryValuesAdjust});";
-            return query;
-        }
-
-        private string GetQueryUpdate(T t, string fieldName, object value)
-        {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            var setSb = new StringBuilder(" SET ");
-            var pkName = _proxyBase.Fields.GetPrimaryKeyName();
-            var propertyInfo = t.GetType().GetProperty(pkName);
-            var pkValue = propertyInfo.GetValue(t, null);
-
-            var pkValueAdjust = AdjustPkValueToQuery(pkValue);
-
-            var valueAdjust = "";
-            if (value.GetType().Name.ToLower() == "string")
-            {
-                valueAdjust = $"'{value}'";
-            }
-            else if (value.GetType().Name.ToLower() == "int32")
-            {
-                valueAdjust = value.ToString();
-            }
-            
-            if (string.IsNullOrEmpty(valueAdjust))
-            {
-                _ = bool.TryParse(value.ToString(), out bool adj);
-                valueAdjust = adj ? "1" : "0";
-            }
-
-            foreach (var campo in _proxyBase.Fields.Items.Select(x => x.NameOnDb).Where(x => x.Equals(fieldName)))
-            {
-                setSb.Append($"{campo} = {valueAdjust}, ");
-            }
-            setSb.Remove(setSb.Length - 2, 2);
-
-            var query = $"UPDATE {_table} " +
-                        $"{setSb} " +
-                        $"WHERE {pkName} = {_proxyBase.Fields.GetQuotePrimaryKey()}{pkValueAdjust}{_proxyBase.Fields.GetQuotePrimaryKey()} ;";
-            return query;
-        }
-
-        private string AdjustPkValueToQuery(object pkValue)
-        {
-            string newPkValue;
-
-            if (_proxyBase.Fields.GetPrimaryKeyType().ToLower() == "datetime")
-            {
-                var dateTime = (DateTime)pkValue;
-                newPkValue = dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
-            }
-            else
-                newPkValue = pkValue.ToString();
-
-            return newPkValue;
-        }
-
-        private static string GetFieldsCommas(List<string> fields)
-        {
-            var queryFields = "";
-            foreach (var field in fields)
-            {
-                queryFields += $"{field},";
-            }
-
-            var queryFieldsAdjust = queryFields.Substring(0, queryFields.Length - 1);
-
-            return queryFieldsAdjust;
-        }
-
-        private static string GetFieldsCommasFields(List<Field> fields)
-        {
-            var queryFields = "";
-            foreach (Field field in fields)
-            {
-                queryFields += $"{field.NameOnDb},";
-            }
-
-            var queryFieldsAdjust = queryFields.Substring(0, queryFields.Length - 1);
-
-            return queryFieldsAdjust;
-        }
-
-        private string GetQueryGetAll()
-        {
-            var query = $"SELECT {GetFieldsCommas(_proxyBase.Fields.Items.Select(x => x.NameOnDb).ToList())} FROM {_table};";
-
-            return query;
-        }
-
-        private string GetQueryCreate()
-        {
-            var fieldsQuery = _proxyBase.Fields.Items.Aggregate("", (current, property) => current + $"{property.NameOnDb} {property.TypeSQLite} NOT NULL,");
-            var fieldPk = _proxyBase.Fields.Items.Where(x => x.IsPrimaryKey).Select(x => x.NameOnDb).ToList();
-            var hasFieldAutoincrement = _proxyBase.Fields.Items.Any(x => x.IsAutoincrement);
-
-            if (fieldPk == null || !fieldPk.Any())
-                throw new AggregateException("Can't find any primary key");
-
-            if (fieldPk.Count > 1 && hasFieldAutoincrement)
-                throw new AggregateException("Can't create table with autoincrement field and composite primary key");
-
-            var queryCreate = $"CREATE TABLE if not exists {_table} ( {fieldsQuery} PRIMARY KEY({GetFieldsCommas(fieldPk)} {(hasFieldAutoincrement ? "AUTOINCREMENT" : "")}))";
-            
-            return queryCreate;
-        }
         
         private static void CreateDbFileIfDontExists(string dbFile)
         {
@@ -465,36 +286,13 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                using (var cmd = new SQLiteCommand(GetQueryCreate(), con))
+                var query = new QueryCreate<T>().Raw;
+
+                using (var cmd = new SQLiteCommand(query, con))
                 {
                     cmd.ExecuteNonQuery();
                 }
             }
-        }
-
-        private string GetQueryGet(List<string> fieldsNames, object value)
-        {
-            return $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {_proxyBase.Fields.GetPrimaryKeyName()} = {GetQueryWhere(value)}";
-        }
-
-        private string GetQueryGetComposite(List<string> fieldsNames, object value1, object value2)
-        {
-            return $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} {GetWhereComposite(value1, value2)}";
-        }
-
-        private string GetQueryDateRange(List<string> fieldsNames, string fieldName, DateTime paramMin, DateTime paramMax)
-        {
-            var query = $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE DATE({fieldName}) >= DATE('{paramMin:yyyy-MM-dd HH:mm:ss.fff}') AND DATE({fieldName}) <= DATE('{paramMax:yyyy-MM-dd HH:mm:ss.fff}') ";
-            
-            return query;
-        }
-
-        private string GetQueryWhere(object pkValue)
-        {
-            var pkValueAdjust = AdjustPkValueToQuery(pkValue);
-
-            var quotePk = _proxyBase.Fields.GetQuotePrimaryKey();
-            return $"{quotePk}{pkValueAdjust}{quotePk}";
         }
 
         private T Map(IDataRecord rdr)
@@ -507,22 +305,22 @@ namespace SQLiteAbstractCrud
 
         private object[] GetArgs(IDataRecord rdr)
         {
-            var fieldsCount = _proxyBase.Fields.Items.Count;
+            var fieldsCount = _proxyBase.GetFieldsCount();
 
             var objects = new object[fieldsCount];
 
             for (int i = 0; i < fieldsCount; i++)
             {
-                switch (_proxyBase.Fields.Items[i].TypeSQLite)
+                switch (_proxyBase.GetFieldTypeSQLite(i))
                 {
                     case "TEXT":
-                        if (_proxyBase.Fields.Items[i].TypeCSharp == "DateTime")
+                        if (_proxyBase.GetFieldTypeCSharp(i) == "DateTime")
                             objects[i] = rdr.GetDateTime(i);
                         else
                             objects[i] = rdr.GetString(i);
                         break;
                     case "INTEGER":
-                        if (_proxyBase.Fields.Items[i].TypeCSharp == "Boolean")
+                        if (_proxyBase.GetFieldTypeCSharp(i) == "Boolean")
                             objects[i] = rdr.GetBoolean(i);
                         else
                             objects[i] = rdr.GetInt32(i);

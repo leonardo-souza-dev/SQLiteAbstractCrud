@@ -1,10 +1,8 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 
-namespace SQLiteAbstractCrud
+namespace Util
 {
-    [ExcludeFromCodeCoverage]
-    public static class Utils
+    public static class Extensions
     {
         public static string GetValue(this object valor)
         {

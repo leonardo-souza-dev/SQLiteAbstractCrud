@@ -1,8 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
-namespace SQLiteAbstractCrud.Queries
+namespace SQLiteAbstractCrud.Proxy.Queries
 {
     public class QueryInsert<T> : Query<T>
     {
@@ -12,10 +12,10 @@ namespace SQLiteAbstractCrud.Queries
 
         public override string ToRaw()
         {
-            var queryValuesAdjust = GetValuesCommas(_type, _fields);
+            var queryValuesAdjust = GetValuesCommas(_type, _proxyBase.Fields);
 
             var query = $"INSERT OR REPLACE INTO {this.TableName} " +
-                        $"({GetFieldsCommasFields(_fields.Items.Where(x => !x.IsAutoincrement).ToList())}) " +
+                        $"({GetFieldsCommasFields(_proxyBase.Fields.Items.Where(x => !x.IsAutoincrement).ToList())}) " +
                         $"VALUES ({queryValuesAdjust});";
 
             return query;
@@ -30,7 +30,7 @@ namespace SQLiteAbstractCrud.Queries
                 var rawValue = t.GetType().GetProperty(field.NameOnDb).GetValue(t, null);
                 object value = field.TypeCSharp switch
                 {
-                    "DateTime" => Convert.SqliteDate((DateTime)rawValue),
+                    "DateTime" => Util.Convert.SqliteDate((DateTime)rawValue),
                     "Boolean" => ((bool)rawValue) ? 1 : 0,
                     _ => rawValue.ToString().Replace('"', '\'').Replace("'", "''"),
                 };

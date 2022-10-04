@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using SQLiteAbstractCrud.Proxy.Attributes;
 
 namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
 {

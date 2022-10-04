@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 
-namespace SQLiteAbstractCrud.Queries
+namespace SQLiteAbstractCrud.Proxy.Queries
 {
     public class QueryUpdate<T> : Query<T>
     {
@@ -21,7 +21,7 @@ namespace SQLiteAbstractCrud.Queries
                 throw new ArgumentNullException(nameof(_value));
 
             var setSb = new StringBuilder(" SET ");
-            var pkName = _fields.GetPrimaryKeyName();
+            var pkName = _proxyBase.Fields.GetPrimaryKeyName();
             var propertyInfo = _type.GetType().GetProperty(pkName);
             var pkValue = propertyInfo.GetValue(_type, null);
 
@@ -43,7 +43,7 @@ namespace SQLiteAbstractCrud.Queries
                 valueAdjust = adj ? "1" : "0";
             }
 
-            foreach (var campo in _fields.Items.Select(x => x.NameOnDb).Where(x => x.Equals(_fieldName)))
+            foreach (var campo in _proxyBase.Fields.Items.Select(x => x.NameOnDb).Where(x => x.Equals(_fieldName)))
             {
                 setSb.Append($"{campo} = {valueAdjust}, ");
             }
@@ -51,7 +51,7 @@ namespace SQLiteAbstractCrud.Queries
 
             var query = $"UPDATE {this.TableName} " +
                         $"{setSb} " +
-                        $"WHERE {pkName} = {_fields.GetQuotePrimaryKey()}{pkValueAdjust}{_fields.GetQuotePrimaryKey()} ;";
+                        $"WHERE {pkName} = {_proxyBase.Fields.GetQuotePrimaryKey()}{pkValueAdjust}{_proxyBase.Fields.GetQuotePrimaryKey()} ;";
 
             return query;
         }
@@ -61,7 +61,7 @@ namespace SQLiteAbstractCrud.Queries
         {
             string newPkValue;
 
-            if (_fields.GetPrimaryKeyType().ToLower() == "datetime")
+            if (_proxyBase.Fields.GetPrimaryKeyType().ToLower() == "datetime")
             {
                 var dateTime = (DateTime)pkValue;
                 newPkValue = dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");

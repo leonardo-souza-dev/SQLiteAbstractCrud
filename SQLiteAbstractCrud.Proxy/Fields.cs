@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using SQLiteAbstractCrud.Proxy.Queries;
 
-namespace SQLiteAbstractCrud
+namespace SQLiteAbstractCrud.Proxy
 {
-    public class Fields
+    internal class Fields
     {
         public List<Field> Items { get; } = new();
 
