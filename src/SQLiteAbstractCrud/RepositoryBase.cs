@@ -144,7 +144,7 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
+                var fieldsNames = _fields.Items.Select(x => x.NameOnDb).ToList();
                 var query = GetQueryGet(fieldsNames, id);
                 using (var cmd = new SQLiteCommand(query, con))
                 {
@@ -177,7 +177,7 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
+                var fieldsNames = _fields.Items.Select(x => x.NameOnDb).ToList();
                 var query = GetQueryDateRange(fieldsNames, fieldName, minInclude, maxInclude);
                 using (var cmd = new SQLiteCommand(query, con))
                 {
@@ -232,7 +232,7 @@ namespace SQLiteAbstractCrud
             var queryValues = "";
             foreach (var field in fields.Items.Where(x => !x.IsAutoincrement))
             {
-                var rawValue = t.GetType().GetProperty(field.Name).GetValue(t, null);
+                var rawValue = t.GetType().GetProperty(field.NameOnDb).GetValue(t, null);
                 object value = "";
                 switch (field.TypeCSharp)
                 {
@@ -347,7 +347,7 @@ namespace SQLiteAbstractCrud
                 valueAdjust = adj ? "1" : "0";
             }
 
-            foreach (var campo in _fields.Items.Select(x => x.Name).Where(x => x.Equals(fieldName)))
+            foreach (var campo in _fields.Items.Select(x => x.NameOnDb).Where(x => x.Equals(fieldName)))
             {
                 setSb.Append($"{campo} = {valueAdjust}, ");
             }
@@ -392,7 +392,7 @@ namespace SQLiteAbstractCrud
             var queryFields = "";
             foreach (Field field in fields)
             {
-                queryFields += $"{field.Name},";
+                queryFields += $"{field.NameOnDb},";
             }
 
             var queryFieldsAdjust = queryFields.Substring(0, queryFields.Length - 1);
@@ -402,15 +402,15 @@ namespace SQLiteAbstractCrud
 
         private string GetQueryGetAll()
         {
-            var query = $"SELECT {GetFieldsCommas(_fields.Items.Select(x => x.Name).ToList())} FROM {_table};";
+            var query = $"SELECT {GetFieldsCommas(_fields.Items.Select(x => x.NameOnDb).ToList())} FROM {_table};";
 
             return query;
         }
 
         private string GetQueryCreate()
         {
-            var fieldsQuery = _fields.Items.Aggregate("", (current, property) => current + $"{property.Name} {property.TypeSQLite} NOT NULL,");
-            var fieldPk = _fields.Items.Where(x => x.IsPrimaryKey).Select(x => x.Name).ToList();
+            var fieldsQuery = _fields.Items.Aggregate("", (current, property) => current + $"{property.NameOnDb} {property.TypeSQLite} NOT NULL,");
+            var fieldPk = _fields.Items.Where(x => x.IsPrimaryKey).Select(x => x.NameOnDb).ToList();
             var hasFieldAutoincrement = _fields.Items.Any(x => x.IsAutoincrement);
 
             if (fieldPk == null || !fieldPk.Any())
