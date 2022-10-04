@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteAbstractCrud.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "samples\AbstractCrud\Sample.csproj", "{D12D818D-F419-4B69-9EDD-EFBE51282761}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteAbstractCrud.Proxy", "SQLiteAbstractCrud.Proxy\SQLiteAbstractCrud.Proxy.csproj", "{7CD84ECD-82CC-4E48-8B41-0DBB77923393}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteAbstractCrud.Proxy", "src\SQLiteAbstractCrud.Proxy\SQLiteAbstractCrud.Proxy.csproj", "{7CD84ECD-82CC-4E48-8B41-0DBB77923393}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Util", "Util\Util.csproj", "{0524CDD3-2878-407E-AA53-CE9AE121A80A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Util", "src\Util\Util.csproj", "{0524CDD3-2878-407E-AA53-CE9AE121A80A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

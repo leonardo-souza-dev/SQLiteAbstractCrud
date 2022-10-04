@@ -8,20 +8,20 @@ using System.Collections.Generic;
 using System.Linq;
 using SQLiteAbstractCrud;
 
-namespace AbstractCrud
+namespace Sample
 {
     public class Program
     {
         static void Main(string[] args)
         {
-            PersonRepository personRepository = new PersonRepository("./my-db.db");
+            PersonRepository personRepository = new ("./my-db.db");
 
-            Console.WriteLine("Simple insert");
+            Console.WriteLine("\r\nSimple insert");
             personRepository.Insert(new Person(false, "Bob"));
             var person = personRepository.GetAll().First();
             Console.WriteLine(person.Name);
 
-            Console.WriteLine("Batch insert");
+            Console.WriteLine("\r\nBatch insert");
             var persons = new List<Person>
             {
                 new Person(false, "Mary"),
@@ -69,4 +69,5 @@ namespace AbstractCrud
         }
     }
 }
+
 ```

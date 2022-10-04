@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -23,14 +23,14 @@
     <None Remove="NUnit3TestAdapter" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SQLiteAbstractCrud\SQLiteAbstractCrud.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Remove="Teste1CampoStrPk\**" />
     <EmbeddedResource Remove="Teste2CamposStrInt\**" />
     <EmbeddedResource Remove="Teste3CamposStrIntStr\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="mydb.db" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SQLiteAbstractCrud\SQLiteAbstractCrud.csproj" />
   </ItemGroup>
 </Project>

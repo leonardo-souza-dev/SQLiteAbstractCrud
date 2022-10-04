@@ -9,19 +9,13 @@
           <PackageProjectUrl>https://github.com/leonardo-souza-dev/SQLiteAbstractCrud</PackageProjectUrl>
           <PackageReadmeFile>README.md</PackageReadmeFile>
       </PropertyGroup>
-    <ItemGroup>
-      <None Include="..\..\README.md">
-        <Pack>True</Pack>
-        <PackagePath>\</PackagePath>
-      </None>
-    </ItemGroup>
 	
     <ItemGroup>
         <PackageReference Include="System.Data.SQLite" Version="1.0.115.5" />
     </ItemGroup>
 	
     <ItemGroup>
-      <ProjectReference Include="..\..\SQLiteAbstractCrud.Proxy\SQLiteAbstractCrud.Proxy.csproj" />
-      <ProjectReference Include="..\..\Util\Util.csproj" />
+      <ProjectReference Include="..\SQLiteAbstractCrud.Proxy\SQLiteAbstractCrud.Proxy.csproj" />
+      <ProjectReference Include="..\Util\Util.csproj" />
     </ItemGroup>
 </Project>
