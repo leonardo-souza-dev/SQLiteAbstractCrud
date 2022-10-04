@@ -161,6 +161,31 @@ namespace SQLiteAbstractCrud
             return entity;
         }
 
+        public virtual T Get(object id1, object id2)
+        {
+            T entity = default;
+
+            using (SQLiteConnection con = new(_dataSource))
+            {
+                con.Open();
+
+                var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
+                var query = GetQueryGetComposite(fieldsNames, id1, id2);
+                using (var cmd = new SQLiteCommand(query, con))
+                {
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            entity = Map(rdr);
+                        }
+                    }
+                }
+            }
+
+            return entity;
+        }
+
         /// <summary>
         /// Get records by date (GTE and LTE)
         /// </summary>
@@ -203,6 +228,20 @@ namespace SQLiteAbstractCrud
                 con.Open();
 
                 var query = GetQueryDelete(id);
+
+                using (var cmd = new SQLiteCommand(query, con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void Delete(object id1, object id2)
+        {
+            using (SQLiteConnection con = new(_dataSource))
+            {
+                con.Open();
+
+                var query = GetQueryDeleteComposite(id1, id2);
 
                 using (var cmd = new SQLiteCommand(query, con))
                 {
@@ -276,39 +315,22 @@ namespace SQLiteAbstractCrud
         
         private string GetQueryDelete(object value)
         {
-            var query = $"DELETE FROM {_table} WHERE {_fields.GetPrimaryKeyName()} = {_fields.GetQuotePrimaryKey()}{GetValue(value)}{_fields.GetQuotePrimaryKey()};";
+            var query = $"DELETE FROM {_table} WHERE {_fields.GetPrimaryKeyName()} = {_fields.GetQuotePrimaryKey()}{value.GetValue()}{_fields.GetQuotePrimaryKey()};";
             return query;
         }
 
-
-        private static string GetValue(object valor)
+        private string GetQueryDeleteComposite(object value1, object value2)
         {
-            Console.WriteLine(Environment.NewLine);
-            Console.WriteLine("1");
-            DateTime? valorDateTime = null;
-            try
-            {
-                valorDateTime = (DateTime)valor;
-                Console.WriteLine("2");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("3 " + ex.ToString());
-            }
+            return $"DELETE FROM {_table} {GetWhereComposite(value1, value2)}";
+        }
 
-            Console.WriteLine("4");
-            if (valorDateTime.HasValue)
-            {
-                Console.WriteLine("5");
-                if (DateTime.TryParse(valorDateTime.Value.ToString(), out DateTime dateValue))
-                {
-                    Console.WriteLine("6");
-                    return dateValue.Year + "-" + dateValue.Month.ToString().PadLeft(2, '0') + "-" + dateValue.Day.ToString().PadLeft(2, '0') + " " +
-                        dateValue.Hour.ToString().PadLeft(2, '0') + ":" + dateValue.Minute.ToString().PadLeft(2, '0') + ":" + dateValue.Second.ToString().PadLeft(2, '0') + "." + dateValue.Millisecond.ToString().PadLeft(3, '0');
-                }
-            }
-            Console.WriteLine("7");
-            return valor?.ToString();
+        private static string GetWhereComposite(object value1, object value2)
+        {
+            var queryWhere = "";
+            var pks = _fields.GetPrimariesKeys().ToList();
+            queryWhere += $"WHERE {pks[0].Name} = {pks[0].Quote}{value1.GetValue()}{pks[0].Quote} AND {pks[1].Name} = {pks[1].Quote}{value2.GetValue()}{pks[1].Quote}";
+
+            return queryWhere;
         }
 
         private string GetQueryInsert(string queryValuesAdjust)
@@ -414,10 +436,10 @@ namespace SQLiteAbstractCrud
             var hasFieldAutoincrement = _fields.Items.Any(x => x.IsAutoincrement);
 
             if (fieldPk == null || !fieldPk.Any())
-                throw new ApplicationException("Can't find any primary key");
+                throw new AggregateException("Can't find any primary key");
 
             if (fieldPk.Count > 1 && hasFieldAutoincrement)
-                throw new ApplicationException("Can't create table with autoincrement field and composite primary key");
+                throw new AggregateException("Can't create table with autoincrement field and composite primary key");
 
             var queryCreate = $"CREATE TABLE if not exists {_table} ( {fieldsQuery} PRIMARY KEY({GetFieldsCommas(fieldPk)} {(hasFieldAutoincrement ? "AUTOINCREMENT" : "")}))";
             
@@ -469,6 +491,11 @@ namespace SQLiteAbstractCrud
         private string GetQueryGet(List<string> fieldsNames, object value)
         {
             return $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} WHERE {_fields.GetPrimaryKeyName()} = {GetQueryWhere(value)}";
+        }
+
+        private string GetQueryGetComposite(List<string> fieldsNames, object value1, object value2)
+        {
+            return $"SELECT {GetFieldsCommas(fieldsNames)} FROM {_table} {GetWhereComposite(value1, value2)}";
         }
 
         private string GetQueryDateRange(List<string> fieldsNames, string fieldName, DateTime paramMin, DateTime paramMax)

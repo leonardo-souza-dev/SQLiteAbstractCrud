@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using NUnit.Framework;
 
 namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields02
@@ -20,7 +18,7 @@ namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields02
         public void WhenEntityHasOneFieldIntPkAiAndCompositePk_MustThrowException()
         {
             // arrange, act & assert
-            Assert.Throws<ApplicationException>(() => new Test2Fields_IntPkAi_StrPk_Repository(_pathFileDb));
+            Assert.Throws<AggregateException>(() => new Test2Fields_IntPkAi_StrPk_Repository(_pathFileDb));
         }
     }
 
@@ -35,15 +33,15 @@ namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields02
     {
         [PrimaryKey]
         [AutoIncrement]
-        public int Field1 { get; }
+        public int IntField { get; }
 
         [PrimaryKey]
-        public string Field2 { get; }
+        public string StringField { get; }
 
-        public Test2Fields_IntPkAi_StrPk(int field1, string field2)
+        public Test2Fields_IntPkAi_StrPk(int intField, string stringField)
         {
-            Field1 = field1;
-            Field2 = field2;
+            IntField = intField;
+            StringField = stringField;
         }
     }
 }
