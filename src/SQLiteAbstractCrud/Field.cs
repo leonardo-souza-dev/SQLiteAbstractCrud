@@ -2,7 +2,7 @@ using System;
 
 namespace SQLiteAbstractCrud
 {
-    internal class Field
+    public class Field
     {
         public string Name { get; private set; }
         internal string TypeCSharp { get; set; }

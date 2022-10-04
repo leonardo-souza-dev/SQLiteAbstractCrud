@@ -26,7 +26,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
 
         [Test]
-        public void GivenAnEntity_WhenUpdate_ThenPropValuesAreCorrect()
+        public void MustUpdate()
         {
             // arrange
             var campoDateTime = DateTime.Now;
@@ -53,7 +53,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
 
         [Test]
-        public void GivenAnExistingItensInDb_WhenGetAll_ThenMustGet()
+        public void MustGet()
         {
             // arrange
             var entity1 = new Test2Fields_DateTimePk_Bool(true, new DateTime(2000, 1, 10));

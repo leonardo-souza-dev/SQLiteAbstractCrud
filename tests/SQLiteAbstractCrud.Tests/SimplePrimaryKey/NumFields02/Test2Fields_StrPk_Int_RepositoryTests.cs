@@ -24,13 +24,13 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
 
         [Test]
-        public void QuandoEntidadeTiverUmCampoStringPkOutroInt_DeveObter()
+        public void MustGet()
         {
             // arrange
             const string valorFoo = "fooValor";
             const int valorBar = 123;
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
-            sut.Insert(new Teste2Campos_StrPk_Int(valorBar, valorFoo));
+            sut.Insert(new Test2Fields_StrPk_Int(valorBar, valorFoo));
 
             // act
             var result = sut.Get(valorFoo);
@@ -42,12 +42,12 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
 
         [Test]
-        public void QuandoEntidadeTiverUmCampoStringPkOutroInt_DeveInserir()
+        public void MustInsert()
         {
             // arrange
             const string valorFoo = "fooValor";
             const int valorBar = 123;
-            var entidade = new Teste2Campos_StrPk_Int(valorBar, valorFoo);
+            var entidade = new Test2Fields_StrPk_Int(valorBar, valorFoo);
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
 
             // act
@@ -61,12 +61,12 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
 
         [Test]
-        public void QuandoEntidadeTiverUmCampoStringPkOutroInt_DeveAtualizar()
+        public void MustUpdate()
         {
             // arrange
             const string valorFoo = "fooValor";
             const int valorBar = 124;
-            var entidade = new Teste2Campos_StrPk_Int(valorBar, valorFoo);
+            var entidade = new Test2Fields_StrPk_Int(valorBar, valorFoo);
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
             sut.Insert(entidade);
             var novoValorBar = 445;
@@ -82,7 +82,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
 
         [Test]
-        public void QuandoEntidadeTiverUmCampoStringPkOutroInt_DeveInserirEmBatch()
+        public void MustInsertInBatch()
         {
             // arrange
             var valor1 = "fooValor1";
@@ -91,14 +91,14 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
             var valorInt1 = 1;
             var valorInt2 = 2;
             var valorInt3 = 3;
-            var entidade1 = new Teste2Campos_StrPk_Int(valorInt1, valor1);
-            var entidade2 = new Teste2Campos_StrPk_Int(valorInt2, valor2);
-            var entidade3 = new Teste2Campos_StrPk_Int(valorInt3, valor3);
+            var entidade1 = new Test2Fields_StrPk_Int(valorInt1, valor1);
+            var entidade2 = new Test2Fields_StrPk_Int(valorInt2, valor2);
+            var entidade3 = new Test2Fields_StrPk_Int(valorInt3, valor3);
 
             var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
 
             // act
-            sut.InsertBatch(new List<Teste2Campos_StrPk_Int> { entidade1, entidade2, entidade3 });
+            sut.InsertBatch(new List<Test2Fields_StrPk_Int> { entidade1, entidade2, entidade3 });
 
             // assert
             var entidadeInserida1 = sut.Get(valor1);
@@ -113,20 +113,20 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
     }
 
-    public class Test2Fields_StrPk_Int_Repository : RepositoryBase<Teste2Campos_StrPk_Int>
+    public class Test2Fields_StrPk_Int_Repository : RepositoryBase<Test2Fields_StrPk_Int>
     {
         public Test2Fields_StrPk_Int_Repository(string pathDbFile) : base(pathDbFile)
         {
         }
     }
 
-    public class Teste2Campos_StrPk_Int
+    public class Test2Fields_StrPk_Int
     {
         public int Bar { get; }
         [PrimaryKey]
         public string Foo { get; }
 
-        public Teste2Campos_StrPk_Int(int bar, string foo)
+        public Test2Fields_StrPk_Int(int bar, string foo)
         {
             Foo = foo;
             Bar = bar;

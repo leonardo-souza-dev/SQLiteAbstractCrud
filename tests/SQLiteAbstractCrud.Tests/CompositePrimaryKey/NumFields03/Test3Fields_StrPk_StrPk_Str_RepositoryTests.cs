@@ -11,24 +11,26 @@ namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields03
         public void Init()
         {
             _caminhoArquivoDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
+            var repo = new Test3Fields_StrPk_StrPk_Str_Repository(_caminhoArquivoDb);
+            repo.DropTable();
         }
 
         [TearDown]
         public void Setup()
         {
-            var repo = new Teste3Campos_StrPk_StrPk_Str_Repository(_caminhoArquivoDb);
+            var repo = new Test3Fields_StrPk_StrPk_Str_Repository(_caminhoArquivoDb);
             repo.DropTable();
         }
 
         [Test]
-        public void QuandoEntidadeTiverUmCampoStringPkOutroStringPkOutroString_DeveObter()
+        public void MustGet()
         {
             // arrange
             const string valorFoo = "fooValor";
             const string valorBar = "123";
             const string valorZab = "zabValor";
-            var sut = new Teste3Campos_StrPk_StrPk_Str_Repository(_caminhoArquivoDb);
-            sut.Insert(new Teste3Campos_StrPk_StrPk_Str(valorFoo, valorBar, valorZab));
+            var sut = new Test3Fields_StrPk_StrPk_Str_Repository(_caminhoArquivoDb);
+            sut.Insert(new Test3Fields_StrPk_StrPk_Str(valorFoo, valorBar, valorZab));
 
             // act
             var result = sut.Get(valorFoo);
@@ -41,14 +43,14 @@ namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields03
         }
 
         [Test]
-        public void QuandoEntidadeTiverUmCampoStringPkOutroStringPkOutroString_DeveInserir()
+        public void MustInsert()
         {
             // arrange
             const string valorFoo = "fooValor";
             const string valorBar = "123";
             const string valorZab = "zabValor";
-            var entidade = new Teste3Campos_StrPk_StrPk_Str(valorFoo, valorBar, valorZab);
-            var sut = new Teste3Campos_StrPk_StrPk_Str_Repository(_caminhoArquivoDb);
+            var entidade = new Test3Fields_StrPk_StrPk_Str(valorFoo, valorBar, valorZab);
+            var sut = new Test3Fields_StrPk_StrPk_Str_Repository(_caminhoArquivoDb);
 
             // act
             sut.Insert(entidade);
@@ -62,14 +64,14 @@ namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields03
         }
     }
 
-    public class Teste3Campos_StrPk_StrPk_Str_Repository : RepositoryBase<Teste3Campos_StrPk_StrPk_Str>
+    public class Test3Fields_StrPk_StrPk_Str_Repository : RepositoryBase<Test3Fields_StrPk_StrPk_Str>
     {
-        public Teste3Campos_StrPk_StrPk_Str_Repository(string pathDbFile) : base(pathDbFile)
+        public Test3Fields_StrPk_StrPk_Str_Repository(string pathDbFile) : base(pathDbFile)
         {
         }
     }
 
-    public class Teste3Campos_StrPk_StrPk_Str
+    public class Test3Fields_StrPk_StrPk_Str
     {
         [PrimaryKey]
         public string Abc { get; init; }
@@ -77,7 +79,7 @@ namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields03
         public string Bar { get; init; }
         public string Cde { get; init; }
 
-        public Teste3Campos_StrPk_StrPk_Str(string abc, string bar, string cde)
+        public Test3Fields_StrPk_StrPk_Str(string abc, string bar, string cde)
         {
             Abc = abc;
             Bar = bar;

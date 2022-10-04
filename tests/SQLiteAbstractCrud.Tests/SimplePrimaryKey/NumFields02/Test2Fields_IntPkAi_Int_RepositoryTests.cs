@@ -25,7 +25,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
 
         [Test]
-        public void ThenMustGet()
+        public void MustGet()
         {
             // arrange
             const int valueMyProperty = 123;
@@ -41,7 +41,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
 
         [Test]
-        public void ThenMustInsert()
+        public void MustInsert()
         {
             // arrange
             const int valueMyProperty = 123;
@@ -58,7 +58,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
 
         [Test]
-        public void ThenMustUpdate()
+        public void MustUpdate()
         {
             // arrange
             const int valueMyProperty = 124;
@@ -78,7 +78,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
 
         [Test]
-        public void MustInsertBatch()
+        public void MustInsertInBatch()
         {
             // arrange
             var valueMyProperty1 = 1;

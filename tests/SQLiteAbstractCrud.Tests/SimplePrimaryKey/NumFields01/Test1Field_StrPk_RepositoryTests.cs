@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -13,6 +14,8 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
         public void Init()
         {
             _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
+            var repo = new Test1Field_StrPk_Repository(_pathFileDb);
+            repo.DropTable();
         }
 
         [TearDown]
@@ -26,7 +29,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
         public void MustGet()
         {
             // arrange
-            const string field1 = "fooValor";
+            const string field1 = "fooValue";
             var sut = new Test1Field_StrPk_Repository(_pathFileDb);
             sut.Insert(new Test1Field_StrPk(field1));
 
@@ -35,14 +38,14 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
 
             // assert
             Assert.NotNull(result);
-            Assert.AreEqual(field1, result.Field1);
+            Assert.AreEqual(field1, result.StringField);
         }
 
         [Test]
         public void MustInsert()
         {
             // arrange
-            const string field1 = "fooValor";
+            const string field1 = "fooValue";
             var entity = new Test1Field_StrPk(field1);
             var sut = new Test1Field_StrPk_Repository(_pathFileDb);
 
@@ -52,7 +55,28 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
             // assert
             var inserteEntity = sut.Get(field1);
             Assert.NotNull(inserteEntity);
-            Assert.AreEqual(field1, inserteEntity.Field1);
+            Assert.AreEqual(field1, inserteEntity.StringField);
+        }
+
+        [Test]
+        public void MustUpdate()
+        {
+            // arrange
+            var stringField = "valueString";
+            var entity = new Test1Field_StrPk(stringField);
+            var sut = new Test1Field_StrPk_Repository(_pathFileDb);
+            sut.Insert(entity);
+            var newValueStringField = "newValue";
+
+            // act
+            _ = sut.Update(entity, nameof(entity.StringField), newValueStringField);
+
+            // assert
+            var insertedEntityWithOldValue = sut.Get(stringField);
+            Assert.Null(insertedEntityWithOldValue);
+            var insertedEntityWithUpdatedValue = sut.GetAll().First(x => x.StringField == newValueStringField);
+            Assert.NotNull(insertedEntityWithUpdatedValue);
+            Assert.AreEqual(newValueStringField, insertedEntityWithUpdatedValue.StringField);
         }
 
         [Test]
@@ -71,8 +95,8 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
             // assert
             Assert.NotNull(actual);
             Assert.AreEqual(2, actual.Count());
-            Assert.True(actual.FirstOrDefault(x => x.Field1 == entity1.Field1) != null);
-            Assert.True(actual.FirstOrDefault(x => x.Field1 == entity2.Field1) != null);
+            Assert.True(actual.FirstOrDefault(x => x.StringField == entity1.StringField) != null);
+            Assert.True(actual.FirstOrDefault(x => x.StringField == entity2.StringField) != null);
         }
 
         [Test]
@@ -98,9 +122,9 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
             Assert.NotNull(insertedEntity1);
             Assert.NotNull(insertedEntity2);
             Assert.NotNull(insertedEntity3);
-            Assert.AreEqual(value1, entity1.Field1);
-            Assert.AreEqual(value2, entity2.Field1);
-            Assert.AreEqual(value3, entity3.Field1);
+            Assert.AreEqual(value1, entity1.StringField);
+            Assert.AreEqual(value2, entity2.StringField);
+            Assert.AreEqual(value3, entity3.StringField);
         }
     }
 
@@ -114,11 +138,11 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
     public class Test1Field_StrPk
     {
         [PrimaryKey]
-        public string Field1 { get; }
+        public string StringField { get; }
 
         public Test1Field_StrPk(string field1)
         {
-            Field1 = field1;
+            StringField = field1;
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SQLiteAbstractCrud
 {
-    internal class Fields
+    public class Fields
     {
         public List<Field> Items { get; } = new();
 

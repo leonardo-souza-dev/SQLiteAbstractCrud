@@ -41,6 +41,7 @@ namespace SQLiteAbstractCrud
 
                 var queryValuesAdjust = GetValuesCommas(t, _fields);
                 var queryInsert = GetQueryInsert(queryValuesAdjust);
+                var queryInsertNew = new QueryInsert<T>(t).Raw;
 
                 using (var cmd = new SQLiteCommand(queryInsert, con))
                 {
@@ -71,7 +72,7 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                var query = GetQueryUpdate(t, field, value);
+                var query = new QueryUpdate<T>(t, field, value).Raw;
 
                 using (var cmd = new SQLiteCommand(query, con))
                 {
