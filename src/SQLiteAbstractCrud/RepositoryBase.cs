@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLiteAbstractCrud.Queries;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
@@ -39,9 +40,7 @@ namespace SQLiteAbstractCrud
             { 
                 con.Open();
 
-                var queryValuesAdjust = GetValuesCommas(t, _fields);
-                var queryInsert = GetQueryInsert(queryValuesAdjust);
-                var queryInsertNew = new QueryInsert<T>(t).Raw;
+                var queryInsert = new QueryInsert<T>(t).Raw;
 
                 using (var cmd = new SQLiteCommand(queryInsert, con))
                 {
@@ -169,7 +168,7 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                var fieldsNames = _fields.Items.Select(x => x.Name).ToList();
+                var fieldsNames = _fields.Items.Select(x => x.NameOnDb).ToList();
                 var query = GetQueryGetComposite(fieldsNames, id1, id2);
                 using (var cmd = new SQLiteCommand(query, con))
                 {
@@ -328,7 +327,7 @@ namespace SQLiteAbstractCrud
         {
             var queryWhere = "";
             var pks = _fields.GetPrimariesKeys().ToList();
-            queryWhere += $"WHERE {pks[0].Name} = {pks[0].Quote}{value1.GetValue()}{pks[0].Quote} AND {pks[1].Name} = {pks[1].Quote}{value2.GetValue()}{pks[1].Quote}";
+            queryWhere += $"WHERE {pks[0].NameOnDb} = {pks[0].Quote}{value1.GetValue()}{pks[0].Quote} AND {pks[1].NameOnDb} = {pks[1].Quote}{value2.GetValue()}{pks[1].Quote}";
 
             return queryWhere;
         }

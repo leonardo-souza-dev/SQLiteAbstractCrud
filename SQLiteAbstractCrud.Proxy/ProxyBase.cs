@@ -13,15 +13,15 @@ namespace SQLiteAbstractCrud
     public class ProxyBase
     {
         private Type _type;
-        private readonly List<OriginalPropertyInfo> _originalPropertiesInfos = new ();
-        private readonly List<ProxyPropertyInfo> _proxyPropertiesInfos = new ();
+        private readonly List<OriginalPropertyInfo> _originalPropertiesInfos = new();
+        private readonly List<ProxyPropertyInfo> _proxyPropertiesInfos = new();
 
-        public Fields Fields { get; } = new ();
+        public Fields Fields { get; } = new();
 
         public ProxyBase(Type type)
         {
             this._type = type;
-            
+
             int i = 0;
             this._type.GetProperties().ToList().ForEach(x =>
             {
@@ -48,8 +48,8 @@ namespace SQLiteAbstractCrud
     {
         public int OriginalOrder { get; }
         private PropertyInfo _propertyInfo;
-        public string OriginalName { get { return _propertyInfo.Name; } }
-        public string CSharpType { get { return _propertyInfo.PropertyType.Name; } }
+        public string OriginalName => _propertyInfo.Name;
+        public string CSharpType => _propertyInfo.PropertyType.Name;
         public bool IsPrimaryKey
         {
             get
