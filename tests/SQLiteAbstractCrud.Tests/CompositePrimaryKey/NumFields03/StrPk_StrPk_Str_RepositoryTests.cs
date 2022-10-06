@@ -24,41 +24,41 @@ namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields03
         public void MustGet()
         {
             // arrange
-            const string valorFoo = "fooValor";
-            const string valorBar = "123";
-            const string valorZab = "zabValor";
+            const string abcValue = "abcValue";
+            const string cdeValue = "cdeValue";
+            const string barValue = "barValue";
             var sut = new StrPk_StrPk_Str_Repository(_pathFileDb);
-            sut.Insert(new StrPk_StrPk_Str(valorFoo, valorBar, valorZab));
+            sut.Insert(new StrPk_StrPk_Str(abcValue, cdeValue, barValue));
 
             // act
-            var result = sut.Get(valorFoo);
+            var result = sut.Get(abcValue);
 
             // assert
             Assert.NotNull(result);
-            Assert.AreEqual(valorFoo, result.Abc);
-            Assert.AreEqual(valorBar, result.Bar);
-            Assert.AreEqual(valorZab, result.Cde);
+            Assert.AreEqual(abcValue, result.Abc);
+            Assert.AreEqual(barValue, result.Bar);
+            Assert.AreEqual(cdeValue, result.Cde);
         }
 
         [Test]
         public void MustInsert()
         {
             // arrange
-            const string stringValue1 = "stringValue1";
-            const string stringValue2 = "stringValue2";
-            const string stringValue3 = "stringValue3";
-            var entity = new StrPk_StrPk_Str(stringValue1, stringValue2, stringValue3);
+            const string abcValue = "abcValue";
+            const string cdeValue = "cdeValue";
+            const string barValue = "barValue";
+            var entity = new StrPk_StrPk_Str(abcValue, cdeValue, barValue);
             var sut = new StrPk_StrPk_Str_Repository(_pathFileDb);
 
             // act
             sut.Insert(entity);
 
             // assert
-            var insertedEntity = sut.Get(stringValue1);
+            var insertedEntity = sut.Get(abcValue);
             Assert.NotNull(insertedEntity);
-            Assert.AreEqual(stringValue1, insertedEntity.Abc);
-            Assert.AreEqual(stringValue2, insertedEntity.Bar);
-            Assert.AreEqual(stringValue3, insertedEntity.Cde);
+            Assert.AreEqual(abcValue, insertedEntity.Abc);
+            Assert.AreEqual(barValue, insertedEntity.Bar);
+            Assert.AreEqual(cdeValue, insertedEntity.Cde);
         }
     }
 
@@ -73,15 +73,15 @@ namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields03
     {
         [PrimaryKey]
         public string Abc { get; init; }
+        public string Cde { get; init; }
         [PrimaryKey]
         public string Bar { get; init; }
-        public string Cde { get; init; }
 
-        public StrPk_StrPk_Str(string abc, string bar, string cde)
+        public StrPk_StrPk_Str(string abc, string cde, string bar)
         {
             Abc = abc;
-            Bar = bar;
             Cde = cde;
+            Bar = bar;
         }
     }
 }

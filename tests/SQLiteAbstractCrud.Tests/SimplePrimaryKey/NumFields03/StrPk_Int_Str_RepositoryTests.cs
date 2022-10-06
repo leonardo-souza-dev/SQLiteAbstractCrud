@@ -104,11 +104,11 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields03
         public void MustUpdate()
         {
             // arrange
-            const string stringValue = "valorString";
+            const string stringValue1 = "stringValue1";
             const int intValue = 123;
-            const string stringValue2 = "valorString2";
-            const string stringValueNew = "valorString2novo";
-            var entity = new StrPk_Int_Str(stringValue, intValue, stringValue2);
+            const string stringValue2 = "stringValue2";
+            const string stringValueNew = "stringValueNew";
+            var entity = new StrPk_Int_Str(stringValue1, intValue, stringValue2);
             var sut = new StrPk_Int_Str_Repository(_pathFileDb);
             sut.Insert(entity);
 
@@ -116,9 +116,9 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields03
             _ = sut.Update(entity, "Cde", stringValueNew);
 
             // assert
-            var updatedEntity = sut.Get(stringValue);
+            var updatedEntity = sut.Get(stringValue1);
             Assert.NotNull(updatedEntity);
-            Assert.AreEqual(stringValue, updatedEntity.Abc);
+            Assert.AreEqual(stringValue1, updatedEntity.Abc);
             Assert.AreEqual(intValue, updatedEntity.Bar);
             Assert.AreEqual(stringValueNew, updatedEntity.Cde);
         }

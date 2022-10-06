@@ -25,89 +25,89 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         public void MustGet()
         {
             // arrange
-            const string stringValue = "fooValor";
+            const string stringValue = "stringValue";
             const int intValue = 123;
             var sut = new StrPk_Int_Repository(_pathFileDb);
-            sut.Insert(new StrPk_Int(intValue, stringValue));
+            sut.Insert(new StrPk_Int(stringValue, intValue));
 
             // act
             var result = sut.Get(stringValue);
 
             // assert
             Assert.NotNull(result);
-            Assert.AreEqual(stringValue, result.Foo);
-            Assert.AreEqual(intValue, result.Bar);
+            Assert.AreEqual(stringValue, result.StringField);
+            Assert.AreEqual(intValue, result.IntField);
         }
 
         [Test]
         public void MustInsert()
         {
             // arrange
-            const string stringValue = "fooValor";
+            const string stringValue = "stringValue";
             const int intValue = 123;
-            var entity = new StrPk_Int(intValue, stringValue);
+            var entity = new StrPk_Int(stringValue, intValue);
             var sut = new StrPk_Int_Repository(_pathFileDb);
 
             // act
             sut.Insert(entity);
 
             // assert
-            var entidadeInserida = sut.Get(stringValue);
-            Assert.NotNull(entidadeInserida);
-            Assert.AreEqual(stringValue, entidadeInserida.Foo);
-            Assert.AreEqual(intValue, entidadeInserida.Bar);
+            var insertedEntity = sut.Get(stringValue);
+            Assert.NotNull(insertedEntity);
+            Assert.AreEqual(stringValue, insertedEntity.StringField);
+            Assert.AreEqual(intValue, insertedEntity.IntField);
         }
 
         [Test]
         public void MustUpdate()
         {
             // arrange
-            const string stringValue = "fooValor";
+            const string stringValue = "stringValue";
             const int intValue = 124;
-            var entity = new StrPk_Int(intValue, stringValue);
+            var entity = new StrPk_Int(stringValue, intValue);
             var sut = new StrPk_Int_Repository(_pathFileDb);
             sut.Insert(entity);
-            var novoValorBar = 445;
+            var newValueInt = 445;
 
             // act
-            _ = sut.Update(entity, "Bar", novoValorBar);
+            _ = sut.Update(entity, "IntField", newValueInt);
 
             // assert
-            var entidadeInserida = sut.Get(stringValue);
-            Assert.NotNull(entidadeInserida);
-            Assert.AreEqual(stringValue, entidadeInserida.Foo);
-            Assert.AreEqual(novoValorBar, entidadeInserida.Bar);
+            var insertedEntity = sut.Get(stringValue);
+            Assert.NotNull(insertedEntity);
+            Assert.AreEqual(stringValue, insertedEntity.StringField);
+            Assert.AreEqual(newValueInt, insertedEntity.IntField);
         }
 
         [Test]
         public void MustInsertInBatch()
         {
             // arrange
-            var valor1 = "fooValor1";
-            var valor2 = "fooValor2";
-            var valor3 = "fooValor3";
-            var valorInt1 = 1;
-            var valorInt2 = 2;
-            var valorInt3 = 3;
-            var entidade1 = new StrPk_Int(valorInt1, valor1);
-            var entidade2 = new StrPk_Int(valorInt2, valor2);
-            var entidade3 = new StrPk_Int(valorInt3, valor3);
+            var stringField1 = "stringField1";
+            var stringField2 = "stringField2";
+            var stringField3 = "stringField3";
+            var intField1 = 1;
+            var intField2 = 2;
+            var intField3 = 3;
+            var entity1 = new StrPk_Int(stringField1, intField1);
+            var entity2 = new StrPk_Int(stringField2, intField2);
+            var entity3 = new StrPk_Int(stringField3, intField3);
 
             var sut = new StrPk_Int_Repository(_pathFileDb);
 
             // act
-            sut.InsertBatch(new List<StrPk_Int> { entidade1, entidade2, entidade3 });
+            sut.InsertBatch(new List<StrPk_Int> { entity1, entity2, entity3 });
 
             // assert
-            var entidadeInserida1 = sut.Get(valor1);
-            var entidadeInserida2 = sut.Get(valor2);
-            var entidadeInserida3 = sut.Get(valor3);
-            Assert.NotNull(entidadeInserida1);
-            Assert.NotNull(entidadeInserida2);
-            Assert.NotNull(entidadeInserida3);
-            Assert.AreEqual(valor1, entidade1.Foo);
-            Assert.AreEqual(valor2, entidade2.Foo);
-            Assert.AreEqual(valor3, entidade3.Foo);
+            var insertedEntity1 = sut.Get(stringField1);
+            var insertedEntity2 = sut.Get(stringField2);
+            var insertedEntity3 = sut.Get(stringField3);
+            Assert.NotNull(insertedEntity1);
+            Assert.NotNull(insertedEntity2);
+            Assert.NotNull(insertedEntity3);
+            Assert.AreEqual(stringField1, entity1.StringField);
+            Assert.AreEqual(stringField2, entity2.StringField);
+            Assert.AreEqual(stringField3, entity3.StringField);
         }
     }
 
@@ -120,14 +120,14 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
 
     public class StrPk_Int
     {
-        public int Bar { get; }
+        public int IntField { get; }
         [PrimaryKey]
-        public string Foo { get; }
+        public string StringField { get; }
 
-        public StrPk_Int(int bar, string foo)
+        public StrPk_Int(string stringField, int intField)
         {
-            Foo = foo;
-            Bar = bar;
+            StringField = stringField;
+            IntField = intField;
         }
     }
 }

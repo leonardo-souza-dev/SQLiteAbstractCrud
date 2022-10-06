@@ -48,51 +48,51 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields05
         public void MustInsert()
         {
             // arrange
-            const string valor1 = "asb";
-            const string valor2 = "123";
-            const string valor3 = "qwerty";
-            const bool valor4 = true;
-            const bool valor5 = false;
-            var entidade = new StrPk_Str_Str_Bool_Bool(valor1, valor2, valor3, valor4, valor5);
+            const string value1 = "asb";
+            const string value2 = "123";
+            const string value3 = "qwerty";
+            const bool value4 = true;
+            const bool value5 = false;
+            var entity = new StrPk_Str_Str_Bool_Bool(value1, value2, value3, value4, value5);
             var sut = new StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb);
 
             // act
-            sut.Insert(entidade);
+            sut.Insert(entity);
 
             // assert
-            var entidadeInserida = sut.Get(valor1);
-            Assert.NotNull(entidadeInserida);
-            Assert.AreEqual(valor1, entidadeInserida.Field1);
-            Assert.AreEqual(valor2, entidadeInserida.Field2);
-            Assert.AreEqual(valor3, entidadeInserida.Field3);
-            Assert.AreEqual(valor4, entidadeInserida.Field4);
-            Assert.AreEqual(valor5, entidadeInserida.Field5);
+            var insertedEntity = sut.Get(value1);
+            Assert.NotNull(insertedEntity);
+            Assert.AreEqual(value1, insertedEntity.Field1);
+            Assert.AreEqual(value2, insertedEntity.Field2);
+            Assert.AreEqual(value3, insertedEntity.Field3);
+            Assert.AreEqual(value4, insertedEntity.Field4);
+            Assert.AreEqual(value5, insertedEntity.Field5);
         }
 
         [Test]
         public void MustUpdate()
         {
             // arrange
-            const string valor1 = "asb";
-            const string valor2 = "123";
-            const string valor3 = "qwerty";
-            const bool valor4 = true;
-            const bool valor5 = false;
-            var entidade = new StrPk_Str_Str_Bool_Bool(valor1, valor2, valor3, valor4, valor5);
+            const string value1 = "asb";
+            const string value2 = "123";
+            const string value3 = "qwerty";
+            const bool value4 = true;
+            const bool value5 = false;
+            var entity = new StrPk_Str_Str_Bool_Bool(value1, value2, value3, value4, value5);
             var sut = new StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb);
-            sut.Insert(entidade);
+            sut.Insert(entity);
 
             // act
-            sut.Update(entidade, "Field4", false);
+            sut.Update(entity, "Field4", false);
 
             // assert
-            var entidadeInserida = sut.Get(valor1);
-            Assert.NotNull(entidadeInserida);
-            Assert.AreEqual(valor1, entidadeInserida.Field1);
-            Assert.AreEqual(valor2, entidadeInserida.Field2);
-            Assert.AreEqual(valor3, entidadeInserida.Field3);
-            Assert.AreEqual(false, entidadeInserida.Field4);
-            Assert.AreEqual(valor5, entidadeInserida.Field5);
+            var insertedEntity = sut.Get(value1);
+            Assert.NotNull(insertedEntity);
+            Assert.AreEqual(value1, insertedEntity.Field1);
+            Assert.AreEqual(value2, insertedEntity.Field2);
+            Assert.AreEqual(value3, insertedEntity.Field3);
+            Assert.AreEqual(false, insertedEntity.Field4);
+            Assert.AreEqual(value5, insertedEntity.Field5);
         }
     }
 
