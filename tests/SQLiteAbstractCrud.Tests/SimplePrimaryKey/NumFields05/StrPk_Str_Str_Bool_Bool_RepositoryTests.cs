@@ -4,20 +4,20 @@ using SQLiteAbstractCrud.Proxy.Attributes;
 
 namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields05
 {
-    public class Test5Fields_StrPk_Str_Str_Bool_Bool_RepositoryTests
+    public class StrPk_Str_Str_Bool_Bool_RepositoryTests
     {
         private readonly string _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
 
         [SetUp]
-        public void Init()
+        public void SetUp()
         {
-            new Test5Fields_StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb).DropTable();
+            new StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb).DropTable();
         }
 
         [TearDown]
-        public void Setup()
+        public void TearDown()
         {
-            new Test5Fields_StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb).DropTable();
+            new StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb).DropTable();
         }
 
         [Test]
@@ -29,8 +29,8 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields05
             const string value3 = "qwerty";
             const bool value4 = true;
             const bool value5 = false;
-            var sut = new Test5Fields_StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb);
-            sut.Insert(new Test5Fields_StrPk_Str_Str_Bool_Bool(value1, value2, value3, value4, value5));
+            var sut = new StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb);
+            sut.Insert(new StrPk_Str_Str_Bool_Bool(value1, value2, value3, value4, value5));
 
             // act
             var result = sut.Get(value1);
@@ -53,8 +53,8 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields05
             const string valor3 = "qwerty";
             const bool valor4 = true;
             const bool valor5 = false;
-            var entidade = new Test5Fields_StrPk_Str_Str_Bool_Bool(valor1, valor2, valor3, valor4, valor5);
-            var sut = new Test5Fields_StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb);
+            var entidade = new StrPk_Str_Str_Bool_Bool(valor1, valor2, valor3, valor4, valor5);
+            var sut = new StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb);
 
             // act
             sut.Insert(entidade);
@@ -78,8 +78,8 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields05
             const string valor3 = "qwerty";
             const bool valor4 = true;
             const bool valor5 = false;
-            var entidade = new Test5Fields_StrPk_Str_Str_Bool_Bool(valor1, valor2, valor3, valor4, valor5);
-            var sut = new Test5Fields_StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb);
+            var entidade = new StrPk_Str_Str_Bool_Bool(valor1, valor2, valor3, valor4, valor5);
+            var sut = new StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb);
             sut.Insert(entidade);
 
             // act
@@ -96,14 +96,14 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields05
         }
     }
 
-    public class Test5Fields_StrPk_Str_Str_Bool_Bool_Repository : RepositoryBase<Test5Fields_StrPk_Str_Str_Bool_Bool>
+    public class StrPk_Str_Str_Bool_Bool_Repository : RepositoryBase<StrPk_Str_Str_Bool_Bool>
     {
-        public Test5Fields_StrPk_Str_Str_Bool_Bool_Repository(string pathDbFile) : base(pathDbFile)
+        public StrPk_Str_Str_Bool_Bool_Repository(string pathDbFile) : base(pathDbFile)
         {
         }
     }
 
-    public class Test5Fields_StrPk_Str_Str_Bool_Bool
+    public class StrPk_Str_Str_Bool_Bool
     {
         [PrimaryKey]
         public string Field1 { get; init; }
@@ -112,7 +112,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields05
         public bool Field4 { get; init; }
         public bool Field5 { get; init; }
 
-        public Test5Fields_StrPk_Str_Str_Bool_Bool(string field1, string field2, string field3, bool field4, bool field5)
+        public StrPk_Str_Str_Bool_Bool(string field1, string field2, string field3, bool field4, bool field5)
         {
             Field1 = field1;
             Field2 = field2;

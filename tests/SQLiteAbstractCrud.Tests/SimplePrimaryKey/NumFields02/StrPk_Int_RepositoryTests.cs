@@ -5,23 +5,20 @@ using SQLiteAbstractCrud.Proxy.Attributes;
 
 namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
 {
-    public class Test2Fields_StrPk_Int_RepositoryTests
+    public class StrPk_Int_RepositoryTests
     {
-        private string _pathFileDb;
+        private readonly string _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
 
         [SetUp]
-        public void Init()
+        public void SetUp()
         {
-            _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
-            var repository = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
-            repository.DropTable();
+            new StrPk_Int_Repository(_pathFileDb).DropTable();
         }
 
         [TearDown]
-        public void Setup()
+        public void TearDown()
         {
-            var repo = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
-            repo.DropTable();
+            new StrPk_Int_Repository(_pathFileDb).DropTable();
         }
 
         [Test]
@@ -30,8 +27,8 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
             // arrange
             const string stringValue = "fooValor";
             const int intValue = 123;
-            var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
-            sut.Insert(new Test2Fields_StrPk_Int(intValue, stringValue));
+            var sut = new StrPk_Int_Repository(_pathFileDb);
+            sut.Insert(new StrPk_Int(intValue, stringValue));
 
             // act
             var result = sut.Get(stringValue);
@@ -48,8 +45,8 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
             // arrange
             const string stringValue = "fooValor";
             const int intValue = 123;
-            var entity = new Test2Fields_StrPk_Int(intValue, stringValue);
-            var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
+            var entity = new StrPk_Int(intValue, stringValue);
+            var sut = new StrPk_Int_Repository(_pathFileDb);
 
             // act
             sut.Insert(entity);
@@ -67,8 +64,8 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
             // arrange
             const string stringValue = "fooValor";
             const int intValue = 124;
-            var entity = new Test2Fields_StrPk_Int(intValue, stringValue);
-            var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
+            var entity = new StrPk_Int(intValue, stringValue);
+            var sut = new StrPk_Int_Repository(_pathFileDb);
             sut.Insert(entity);
             var novoValorBar = 445;
 
@@ -92,14 +89,14 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
             var valorInt1 = 1;
             var valorInt2 = 2;
             var valorInt3 = 3;
-            var entidade1 = new Test2Fields_StrPk_Int(valorInt1, valor1);
-            var entidade2 = new Test2Fields_StrPk_Int(valorInt2, valor2);
-            var entidade3 = new Test2Fields_StrPk_Int(valorInt3, valor3);
+            var entidade1 = new StrPk_Int(valorInt1, valor1);
+            var entidade2 = new StrPk_Int(valorInt2, valor2);
+            var entidade3 = new StrPk_Int(valorInt3, valor3);
 
-            var sut = new Test2Fields_StrPk_Int_Repository(_pathFileDb);
+            var sut = new StrPk_Int_Repository(_pathFileDb);
 
             // act
-            sut.InsertBatch(new List<Test2Fields_StrPk_Int> { entidade1, entidade2, entidade3 });
+            sut.InsertBatch(new List<StrPk_Int> { entidade1, entidade2, entidade3 });
 
             // assert
             var entidadeInserida1 = sut.Get(valor1);
@@ -114,20 +111,20 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         }
     }
 
-    public class Test2Fields_StrPk_Int_Repository : RepositoryBase<Test2Fields_StrPk_Int>
+    public class StrPk_Int_Repository : RepositoryBase<StrPk_Int>
     {
-        public Test2Fields_StrPk_Int_Repository(string pathDbFile) : base(pathDbFile)
+        public StrPk_Int_Repository(string pathDbFile) : base(pathDbFile)
         {
         }
     }
 
-    public class Test2Fields_StrPk_Int
+    public class StrPk_Int
     {
         public int Bar { get; }
         [PrimaryKey]
         public string Foo { get; }
 
-        public Test2Fields_StrPk_Int(int bar, string foo)
+        public StrPk_Int(int bar, string foo)
         {
             Foo = foo;
             Bar = bar;

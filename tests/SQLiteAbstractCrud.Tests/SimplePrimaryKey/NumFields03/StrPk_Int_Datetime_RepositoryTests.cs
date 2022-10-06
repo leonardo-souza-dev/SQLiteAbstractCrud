@@ -7,17 +7,16 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields03
 {
     public class StrPk_Int_Datetime_RepositoryTests
     {
-        private string _pathFileDb;
+        private readonly string _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
 
         [SetUp]
-        public void Init()
+        public void SetUp()
         {
-            _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
             new StrPk_Int_Datetime_Repository(_pathFileDb).DropTable();
         }
 
         [TearDown]
-        public void Setup()
+        public void TearDown()
         {
             new StrPk_Int_Datetime_Repository(_pathFileDb).DropTable();
         }
