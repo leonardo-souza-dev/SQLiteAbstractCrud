@@ -54,7 +54,6 @@ namespace Sample
         public string Name { get; set; }
         public bool IsDriver { get; set; }
 
-        // required constructor with all properties in alphabetical order
         public Person(int id, bool isDriver, string name)
         {
             Id = id;
