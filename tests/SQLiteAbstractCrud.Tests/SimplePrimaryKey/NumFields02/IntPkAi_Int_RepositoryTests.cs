@@ -26,16 +26,17 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         public void MustGet()
         {
             // arrange
-            const int valueMyProperty = 123;
+            int id = 1;
+            int intField = 123;
             var sut = new IntPkAi_Int_Repository(_pathFileDb);
-            sut.Insert(new IntPkAi_Int(1, valueMyProperty));
+            sut.Insert(new IntPkAi_Int(id, intField));
 
             // act
-            var result = sut.GetAll().First();
+            var actual = sut.GetAll().First();
 
             // assert
-            Assert.NotNull(result);
-            Assert.AreEqual(valueMyProperty, result.MyProperty);
+            Assert.NotNull(actual);
+            Assert.AreEqual(intField, actual.IntField);
         }
 
         [Test]
@@ -52,7 +53,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
             // assert
             var insertedEntity = sut.GetAll().First();
             Assert.NotNull(insertedEntity);
-            Assert.AreEqual(valueMyProperty, insertedEntity.MyProperty);
+            Assert.AreEqual(valueMyProperty, insertedEntity.IntField);
         }
 
         [Test]
@@ -67,12 +68,12 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
 
             // act
             var insertedEntity = sut.GetAll().First();
-            insertedEntity.MyProperty = newValueMyProperty;
-            _ = sut.Update(insertedEntity, nameof(insertedEntity.MyProperty), newValueMyProperty);
+            insertedEntity.IntField = newValueMyProperty;
+            _ = sut.Update(insertedEntity, nameof(insertedEntity.IntField), newValueMyProperty);
 
             // assert
             Assert.NotNull(insertedEntity);
-            Assert.AreEqual(newValueMyProperty, insertedEntity.MyProperty);
+            Assert.AreEqual(newValueMyProperty, insertedEntity.IntField);
         }
 
         [Test]
@@ -92,15 +93,15 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
             sut.InsertBatch(new List<IntPkAi_Int> { entity1, entity2, entity3 });
 
             // assert
-            var insertedEntity1 = sut.GetAll().Where(x => x.MyProperty == valueMyProperty1);
-            var insertedEntity2 = sut.GetAll().Where(x => x.MyProperty == valueMyProperty2);
-            var insertedEntity3 = sut.GetAll().Where(x => x.MyProperty == valueMyProperty3);
+            var insertedEntity1 = sut.GetAll().Where(x => x.IntField == valueMyProperty1);
+            var insertedEntity2 = sut.GetAll().Where(x => x.IntField == valueMyProperty2);
+            var insertedEntity3 = sut.GetAll().Where(x => x.IntField == valueMyProperty3);
             Assert.NotNull(insertedEntity1);
             Assert.NotNull(insertedEntity2);
             Assert.NotNull(insertedEntity3);
-            Assert.AreEqual(valueMyProperty1, entity1.MyProperty);
-            Assert.AreEqual(valueMyProperty2, entity2.MyProperty);
-            Assert.AreEqual(valueMyProperty3, entity3.MyProperty);
+            Assert.AreEqual(valueMyProperty1, entity1.IntField);
+            Assert.AreEqual(valueMyProperty2, entity2.IntField);
+            Assert.AreEqual(valueMyProperty3, entity3.IntField);
         }
     }
 
@@ -116,12 +117,13 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         [PrimaryKey]
         [AutoIncrement]
         public int Id { get; }
-        public int MyProperty { get; set; }
 
-        public IntPkAi_Int(int id, int myProperty)
+        public int IntField { get; set; }
+
+        public IntPkAi_Int(int id, int intField)
         {
             Id = id;
-            MyProperty = myProperty;
+            IntField = intField;
         }
     }
 }

@@ -31,12 +31,12 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
             sut.Insert(new StrPk_Int(stringValue, intValue));
 
             // act
-            var result = sut.Get(stringValue);
+            var actual = sut.Get(stringValue);
 
             // assert
-            Assert.NotNull(result);
-            Assert.AreEqual(stringValue, result.StringField);
-            Assert.AreEqual(intValue, result.IntField);
+            Assert.NotNull(actual);
+            Assert.AreEqual(stringValue, actual.StringField);
+            Assert.AreEqual(intValue, actual.IntField);
         }
 
         [Test]

@@ -33,13 +33,13 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields03
             sut.Insert(new StrPk_Int_Str(fooValue, barValue, asdfgValue));
 
             // act
-            var result = sut.Get(fooValue);
+            var actual = sut.Get(fooValue);
 
             // assert
-            Assert.NotNull(result);
-            Assert.AreEqual(fooValue, result.Abc);
-            Assert.AreEqual(barValue, result.Bar);
-            Assert.AreEqual(asdfgValue, result.Cde);
+            Assert.NotNull(actual);
+            Assert.AreEqual(fooValue, actual.Abc);
+            Assert.AreEqual(barValue, actual.Bar);
+            Assert.AreEqual(asdfgValue, actual.Cde);
         }
 
         [Test]

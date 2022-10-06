@@ -9,9 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteAbstractCrud.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "samples\AbstractCrud\Sample.csproj", "{D12D818D-F419-4B69-9EDD-EFBE51282761}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteAbstractCrud.Proxy", "src\SQLiteAbstractCrud.Proxy\SQLiteAbstractCrud.Proxy.csproj", "{7CD84ECD-82CC-4E48-8B41-0DBB77923393}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteAbstractCrud.Proxy", "src\SQLiteAbstractCrud.Proxy\SQLiteAbstractCrud.Proxy.csproj", "{7CD84ECD-82CC-4E48-8B41-0DBB77923393}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Util", "src\Util\Util.csproj", "{0524CDD3-2878-407E-AA53-CE9AE121A80A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Util", "src\Util\Util.csproj", "{0524CDD3-2878-407E-AA53-CE9AE121A80A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{41AC606A-E352-4597-BD28-B72FE353C639}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

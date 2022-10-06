@@ -31,13 +31,13 @@ namespace SQLiteAbstractCrud.Tests.CompositePrimaryKey.NumFields03
             sut.Insert(new StrPk_StrPk_Str(abcValue, cdeValue, barValue));
 
             // act
-            var result = sut.Get(abcValue);
+            var actual = sut.Get(abcValue);
 
             // assert
-            Assert.NotNull(result);
-            Assert.AreEqual(abcValue, result.Abc);
-            Assert.AreEqual(barValue, result.Bar);
-            Assert.AreEqual(cdeValue, result.Cde);
+            Assert.NotNull(actual);
+            Assert.AreEqual(abcValue, actual.Abc);
+            Assert.AreEqual(barValue, actual.Bar);
+            Assert.AreEqual(cdeValue, actual.Cde);
         }
 
         [Test]

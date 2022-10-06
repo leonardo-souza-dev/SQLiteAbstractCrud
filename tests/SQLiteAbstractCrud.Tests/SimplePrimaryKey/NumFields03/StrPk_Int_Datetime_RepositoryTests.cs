@@ -63,11 +63,11 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields03
             sut.Insert(new StrPk_Int_Datetime(stringValue3, dateTimeValue3, intValue3));
 
             // act
-            var result = sut.GetByDateRange("cDateTimeField", new DateTime(2020, 3, 30), new DateTime(2021, 1, 1));
+            var actual = sut.GetByDateRange("cDateTimeField", new DateTime(2020, 3, 30), new DateTime(2021, 1, 1));
 
             // assert
-            Assert.NotNull(result);
-            Assert.AreEqual(2, result.Count);
+            Assert.NotNull(actual);
+            Assert.AreEqual(2, actual.Count);
         }
 
         [Test]
