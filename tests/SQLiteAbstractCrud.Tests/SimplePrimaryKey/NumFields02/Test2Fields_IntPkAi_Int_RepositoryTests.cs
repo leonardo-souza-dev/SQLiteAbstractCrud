@@ -14,15 +14,13 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         public void Init()
         {
             _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
-            var repo = new Test2Fields_IntPk_Int_Repository(_pathFileDb);
-            repo.DropTable();
+            new Test2Fields_IntPk_Int_Repository(_pathFileDb).DropTable();
         }
 
         [TearDown]
         public void Setup()
         {
-            var repo = new Test2Fields_IntPk_Int_Repository(_pathFileDb);
-            repo.DropTable();
+            new Test2Fields_IntPk_Int_Repository(_pathFileDb).DropTable();
         }
 
         [Test]
@@ -31,7 +29,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
             // arrange
             const int valueMyProperty = 123;
             var sut = new Test2Fields_IntPk_Int_Repository(_pathFileDb);
-            sut.Insert(new Test2Fields_IntPkAi_Int(valueMyProperty));
+            sut.Insert(new Test2Fields_IntPkAi_Int(1, valueMyProperty));
 
             // act
             var result = sut.GetAll().ToList().First();
@@ -46,7 +44,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         {
             // arrange
             const int valueMyProperty = 123;
-            var entity = new Test2Fields_IntPkAi_Int(valueMyProperty);
+            var entity = new Test2Fields_IntPkAi_Int(1, valueMyProperty);
             var sut = new Test2Fields_IntPk_Int_Repository(_pathFileDb);
 
             // act
@@ -63,14 +61,14 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         {
             // arrange
             const int valueMyProperty = 124;
-            var entity = new Test2Fields_IntPkAi_Int(valueMyProperty);
+            var entity = new Test2Fields_IntPkAi_Int(1, valueMyProperty);
             var sut = new Test2Fields_IntPk_Int_Repository(_pathFileDb);
             sut.Insert(entity);
             var newValueMyProperty = 445;
 
             // act
             var insertedEntity = sut.GetAll().ToList().First();
-            insertedEntity.SetMyProperty(newValueMyProperty);
+            insertedEntity.MyProperty = newValueMyProperty;
             _ = sut.Update(insertedEntity, nameof(insertedEntity.MyProperty), newValueMyProperty);
 
             // assert
@@ -82,12 +80,12 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         public void MustInsertInBatch()
         {
             // arrange
-            var valueMyProperty1 = 1;
-            var valueMyProperty2 = 2;
-            var valueMyProperty3 = 3;
-            var entity1 = new Test2Fields_IntPkAi_Int(valueMyProperty1);
-            var entity2 = new Test2Fields_IntPkAi_Int(valueMyProperty2);
-            var entity3 = new Test2Fields_IntPkAi_Int(valueMyProperty3);
+            var valueMyProperty1 = 10;
+            var valueMyProperty2 = 20;
+            var valueMyProperty3 = 30;
+            var entity1 = new Test2Fields_IntPkAi_Int(1,valueMyProperty1);
+            var entity2 = new Test2Fields_IntPkAi_Int(2, valueMyProperty2);
+            var entity3 = new Test2Fields_IntPkAi_Int(3, valueMyProperty3);
 
             var sut = new Test2Fields_IntPk_Int_Repository(_pathFileDb);
 
@@ -119,7 +117,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
         [PrimaryKey]
         [AutoIncrement]
         public int Id { get; }
-        public int MyProperty { get; private set; }
+        public int MyProperty { get; set; }
 
         public Test2Fields_IntPkAi_Int(int id, int myProperty)
         {
@@ -127,14 +125,14 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
             MyProperty = myProperty;
         }
 
-        public Test2Fields_IntPkAi_Int(int myProperty)
-        {
-            MyProperty = myProperty;
-        }
+        //public Test2Fields_IntPkAi_Int(int myProperty)
+        //{
+        //    MyProperty = myProperty;
+        //}
 
-        public void SetMyProperty(int value)
-        {
-            MyProperty = value;
-        }
+        //public void SetMyProperty(int value)
+        //{
+        //    MyProperty = value;
+        //}
     }
 }

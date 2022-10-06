@@ -30,16 +30,16 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
         public void MustGet()
         {
             // arrange
-            const string field1 = "fooValue";
+            const string stringFieldValue = "value";
             var sut = new Test1Field_StrPk_Repository(_pathFileDb);
-            sut.Insert(new Test1Field_StrPk(field1));
+            sut.Insert(new Test1Field_StrPk(stringFieldValue));
 
             // act
-            var result = sut.Get(field1);
+            var actual = sut.Get(stringFieldValue);
 
             // assert
-            Assert.NotNull(result);
-            Assert.AreEqual(field1, result.StringField);
+            Assert.NotNull(actual);
+            Assert.AreEqual(stringFieldValue, actual.StringField);
         }
 
         [Test]
@@ -141,9 +141,9 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
         [PrimaryKey]
         public string StringField { get; }
 
-        public Test1Field_StrPk(string field1)
+        public Test1Field_StrPk(string stringField)
         {
-            StringField = field1;
+            StringField = stringField;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace SQLiteAbstractCrud.Proxy.Queries
 
         public abstract string ToRaw();
 
-        public PropertyInfo GetPropertyInfo(string property)
+        public System.Reflection.PropertyInfo GetPropertyInfo(string property)
         {
             return _type.GetType().GetProperty(property);
         }

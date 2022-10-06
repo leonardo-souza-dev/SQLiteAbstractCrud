@@ -12,7 +12,6 @@ namespace SQLiteAbstractCrud
 {
     public abstract class RepositoryBase<T> : IRepository<T>
     {
-        private readonly string _table = typeof(T).Name;
         private readonly string _dataSource;
         private readonly ProxyBase _proxyBase = new (typeof(T));
 
@@ -21,7 +20,7 @@ namespace SQLiteAbstractCrud
             CreateDbFileIfDontExists(pathDbFile);
             _dataSource = $"Data Source={pathDbFile}";
             
-            CreateTableIfDontExists(_dataSource);            
+            CreateTableIfDontExists(_dataSource);
         }
 
         protected RepositoryBase()
@@ -45,6 +44,7 @@ namespace SQLiteAbstractCrud
 
                 var pkName = _proxyBase.GetPrimaryKeyName();
 
+                //TODO: get pk value from proxy
                 rawValue = t.GetType().GetProperty(pkName).GetValue(t, null);
             }
 
@@ -193,6 +193,9 @@ namespace SQLiteAbstractCrud
         /// <returns>Records</returns>
         public virtual List<T> GetByDateRange(string fieldName, DateTime minInclude, DateTime maxInclude)
         {
+            if (!_proxyBase.FieldExists(fieldName))
+                throw new ArgumentException(fieldName, nameof(fieldName));
+
             T entity = default;
             var entities = new List<T>();
 
@@ -204,7 +207,6 @@ namespace SQLiteAbstractCrud
 
                 using (var cmd = new SQLiteCommand(query, con))
                 {
-
                     using (var rdr = cmd.ExecuteReader())
                     {
                         while (rdr.Read())
@@ -255,7 +257,7 @@ namespace SQLiteAbstractCrud
             {
                 con.Open();
 
-                using (var cmd = new SQLiteCommand($"DROP TABLE {_table};", con))
+                using (var cmd = new SQLiteCommand($"DROP TABLE {_proxyBase.GetTableName()};", con))
                 {
                     cmd.ExecuteNonQuery();
                 }
@@ -305,22 +307,24 @@ namespace SQLiteAbstractCrud
 
         private object[] GetArgs(IDataRecord rdr)
         {
-            var fieldsCount = _proxyBase.GetFieldsCount();
+            var fieldsCount = _proxyBase.GetCtorParametersCount();
 
             var objects = new object[fieldsCount];
 
             for (int i = 0; i < fieldsCount; i++)
             {
-                switch (_proxyBase.GetFieldTypeSQLite(i))
+                var fieldTypeSQLite = _proxyBase.GetCtorParameterSQLiteType(i);
+
+                switch (fieldTypeSQLite)
                 {
                     case "TEXT":
-                        if (_proxyBase.GetFieldTypeCSharp(i) == "DateTime")
+                        if (_proxyBase.GetCtorParemeterCSharpType(i) == "DateTime")
                             objects[i] = rdr.GetDateTime(i);
                         else
                             objects[i] = rdr.GetString(i);
                         break;
                     case "INTEGER":
-                        if (_proxyBase.GetFieldTypeCSharp(i) == "Boolean")
+                        if (_proxyBase.GetCtorParemeterCSharpType(i) == "Boolean")
                             objects[i] = rdr.GetBoolean(i);
                         else
                             objects[i] = rdr.GetInt32(i);

@@ -6,45 +6,42 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields05
 {
     public class Test5Fields_StrPk_Str_Str_Bool_Bool_RepositoryTests
     {
-        private string _pathFileDb;
+        private readonly string _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
 
         [SetUp]
         public void Init()
         {
-            _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
-            var repo = new Test5Fields_StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb);
-            repo.DropTable();
+            new Test5Fields_StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb).DropTable();
         }
 
         [TearDown]
         public void Setup()
         {
-            var repo = new Test5Fields_StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb);
-            repo.DropTable();
+            new Test5Fields_StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb).DropTable();
         }
 
         [Test]
         public void MustGet()
         {
             // arrange
-            const string valor1 = "asb";
-            const string valor2 = "123";
-            const string valor3 = "qwerty";
-            const bool valor4 = true;
-            const bool valor5 = false;
+            const string value1 = "asb";
+            const string value2 = "123";
+            const string value3 = "qwerty";
+            const bool value4 = true;
+            const bool value5 = false;
             var sut = new Test5Fields_StrPk_Str_Str_Bool_Bool_Repository(_pathFileDb);
-            sut.Insert(new Test5Fields_StrPk_Str_Str_Bool_Bool(valor1, valor2, valor3, valor4, valor5));
+            sut.Insert(new Test5Fields_StrPk_Str_Str_Bool_Bool(value1, value2, value3, value4, value5));
 
             // act
-            var result = sut.Get(valor1);
+            var result = sut.Get(value1);
 
             // assert
             Assert.NotNull(result);
-            Assert.AreEqual(valor1, result.Field1);
-            Assert.AreEqual(valor2, result.Field2);
-            Assert.AreEqual(valor3, result.Field3);
-            Assert.AreEqual(valor4, result.Field4);
-            Assert.AreEqual(valor5, result.Field5);
+            Assert.AreEqual(value1, result.Field1);
+            Assert.AreEqual(value2, result.Field2);
+            Assert.AreEqual(value3, result.Field3);
+            Assert.AreEqual(value4, result.Field4);
+            Assert.AreEqual(value5, result.Field5);
         }
 
         [Test]
@@ -115,13 +112,13 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields05
         public bool Field4 { get; init; }
         public bool Field5 { get; init; }
 
-        public Test5Fields_StrPk_Str_Str_Bool_Bool(string valor1, string valor2, string valor3, bool valor4, bool valor5)
+        public Test5Fields_StrPk_Str_Str_Bool_Bool(string field1, string field2, string field3, bool field4, bool field5)
         {
-            Field1 = valor1;
-            Field2 = valor2;
-            Field3 = valor3;
-            Field4 = valor4;
-            Field5 = valor5;
+            Field1 = field1;
+            Field2 = field2;
+            Field3 = field3;
+            Field4 = field4;
+            Field5 = field5;
         }
     }
 }
