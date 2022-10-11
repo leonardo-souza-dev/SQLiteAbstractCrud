@@ -83,7 +83,7 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields02
             var valueMyProperty1 = 10;
             var valueMyProperty2 = 20;
             var valueMyProperty3 = 30;
-            var entity1 = new IntPkAi_Int(1,valueMyProperty1);
+            var entity1 = new IntPkAi_Int(1, valueMyProperty1);
             var entity2 = new IntPkAi_Int(2, valueMyProperty2);
             var entity3 = new IntPkAi_Int(3, valueMyProperty3);
 

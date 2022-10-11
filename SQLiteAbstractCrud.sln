@@ -9,15 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteAbstractCrud.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample", "samples\AbstractCrud\Sample.csproj", "{D12D818D-F419-4B69-9EDD-EFBE51282761}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteAbstractCrud.Proxy", "src\SQLiteAbstractCrud.Proxy\SQLiteAbstractCrud.Proxy.csproj", "{7CD84ECD-82CC-4E48-8B41-0DBB77923393}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Util", "src\Util\Util.csproj", "{0524CDD3-2878-407E-AA53-CE9AE121A80A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A98A9CCA-3BD6-4419-A0F6-E94579F6BFFC}"
-	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,14 +27,6 @@ Global
 		{D12D818D-F419-4B69-9EDD-EFBE51282761}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D12D818D-F419-4B69-9EDD-EFBE51282761}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D12D818D-F419-4B69-9EDD-EFBE51282761}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7CD84ECD-82CC-4E48-8B41-0DBB77923393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7CD84ECD-82CC-4E48-8B41-0DBB77923393}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7CD84ECD-82CC-4E48-8B41-0DBB77923393}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7CD84ECD-82CC-4E48-8B41-0DBB77923393}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0524CDD3-2878-407E-AA53-CE9AE121A80A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0524CDD3-2878-407E-AA53-CE9AE121A80A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0524CDD3-2878-407E-AA53-CE9AE121A80A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0524CDD3-2878-407E-AA53-CE9AE121A80A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

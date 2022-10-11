@@ -1,0 +1,95 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+
+namespace SQLiteAbstractCrud.Proxy
+{
+    public class ProxyBase
+    {
+        private Type _type;
+        private readonly List<ProxyPropertyInfo> _proxyPropertiesInfos = new();
+        private readonly List<ProxyCtorParameterInfo> _proxyCtorParametersInfos = new();
+
+        internal Fields Fields;
+
+        public ProxyBase(Type type)
+        {
+            this._type = type;
+            
+            var ctorParameters = _type.GetConstructors().Single().GetParameters().ToList();
+            ctorParameters.ForEach(p => _proxyCtorParametersInfos.Add(new ProxyCtorParameterInfo(p)));
+
+            var propertiesInfos = this._type.GetProperties().ToList();
+            propertiesInfos.ForEach(p => _proxyPropertiesInfos.Add(new ProxyPropertyInfo(p)));
+
+            Fields = new Fields(_proxyPropertiesInfos);
+        }
+
+        [Obsolete]
+        public string GetPrimaryKeyName()
+        {
+            return Fields.GetPrimaryKeyName();
+        }
+
+        [Obsolete]
+        public string GetQuotePrimaryKey()
+        {
+            return Fields.GetQuotePrimaryKey();
+        }
+
+        public List<string> GetFieldsNames()
+        {
+            return Fields.Items.Select(x => x.NameOnDb).ToList();
+        }
+
+        public List<Field> GetFieldsNotAutoIncrement()
+        {
+            return Fields.Items.Where(x => !x.IsAutoincrement).ToList();
+        }
+
+        public int GetFieldsCount()
+        {
+            return this.Fields.Items.Count;
+        }
+        public int GetCtorParametersCount()
+        {
+            return this._proxyCtorParametersInfos.Count;
+        }
+
+        public string GetFieldTypeSQLite(int index)
+        {
+            return this.Fields.Items[index].SQLiteType;
+        }
+
+        public string GetCtorParameterSQLiteType(int index)
+        {
+            return this._proxyCtorParametersInfos[index].SQLiteType;
+        }
+
+        public string GetFieldTypeCSharp(int index)
+        {
+            return this.Fields.Items[index].TypeCSharp;
+        }
+
+        public List<ProxyCtorParameterInfo> GetCtorParemetersInfos()
+        {
+            return this._proxyCtorParametersInfos;
+        }
+
+        public string GetCtorParemeterCSharpType(int index)
+        {
+            return this._proxyCtorParametersInfos[index].CSharpType;
+        }
+
+        public string GetTableName()
+        {
+            return _type.Name;
+        }
+
+        public bool FieldExists(string fieldName)
+        {
+            return Fields.Items.Any(x => x.NameOnDb.ToLower() == fieldName.ToLower());
+        }
+    }
+}

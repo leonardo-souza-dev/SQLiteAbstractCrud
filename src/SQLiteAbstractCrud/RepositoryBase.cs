@@ -313,6 +313,12 @@ namespace SQLiteAbstractCrud
 
             for (int i = 0; i < fieldsCount; i++)
             {
+                if (rdr.GetValue(i) is DBNull)
+                {
+                    objects[i] = null;
+                    continue;
+                }
+
                 var fieldTypeSQLite = _proxyBase.GetCtorParameterSQLiteType(i);
 
                 switch (fieldTypeSQLite)
