@@ -14,17 +14,19 @@ namespace SQLiteAbstractCrud.Proxy.Queries
 
         public override string ToRaw()
         {
-            var fieldsQuery = _proxyBase.Fields.Items.Aggregate("", (current, property) => current + $"{property.NameOnDb} {property.TypeSQLite} NOT NULL,");
-            var fieldPk = _proxyBase.Fields.Items.Where(x => x.IsPrimaryKey).Select(x => x.NameOnDb).ToList();
+            
+            var fieldsQuery = _proxyBase.GetCtorParemetersInfos().Aggregate("", (current, property) => current + $"{property.Name} {property.SQLiteType} NOT NULL,");
+            var fieldPk = _proxyBase.Fields.Items.Where(x => x.IsPrimaryKey).Select(x => x.NameOnDb).ToList();//todo: Proxy GetPkName
             var hasFieldAutoincrement = _proxyBase.Fields.Items.Any(x => x.IsAutoincrement);
 
             if (fieldPk == null || !fieldPk.Any())
-                throw new AggregateException("Can't find any primary key");
+                throw new AggregateException("Cant find any primary key");
 
             if (fieldPk.Count > 1 && hasFieldAutoincrement)
-                throw new AggregateException("Can't create table with autoincrement field and composite primary key");
+                throw new AggregateException("Cant create table with autoincrement field and composite primary key");
 
-            var queryCreate = $"CREATE TABLE if not exists {this.TableName} ( {fieldsQuery} PRIMARY KEY({GetFieldsCommas(fieldPk)} {(hasFieldAutoincrement ? "AUTOINCREMENT" : "")}))";
+            var queryCreate = $"CREATE TABLE if not exists {this.TableName} " + 
+                $"( {fieldsQuery} PRIMARY KEY({GetFieldsCommas(fieldPk)} {(hasFieldAutoincrement ? "AUTOINCREMENT" : "")}))";
 
             return queryCreate;
         }

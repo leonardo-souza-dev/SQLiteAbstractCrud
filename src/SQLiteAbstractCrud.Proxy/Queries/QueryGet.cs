@@ -17,9 +17,10 @@ namespace SQLiteAbstractCrud.Proxy.Queries
 
         public override string ToRaw()
         {
-            return $"SELECT {GetFieldsCommas(_proxyBase.GetFieldsNames())} " + 
-                $"FROM {this.TableName} " + 
-                $" WHERE {_proxyBase.Fields.GetPrimaryKeyName()} = {GetQueryWhere(_id)}";
+            var ctorParametersNames = _proxyBase.GetCtorParemetersInfos().Select(x => x.Name).ToList();
+            return $" SELECT {GetFieldsCommas(ctorParametersNames)} " + 
+                   $" FROM {this.TableName} " + 
+                   $" WHERE {_proxyBase.Fields.GetPrimaryKeyName()} = {GetQueryWhere(_id)}";
         }
 
         private static string GetFieldsCommas(List<string> fields)

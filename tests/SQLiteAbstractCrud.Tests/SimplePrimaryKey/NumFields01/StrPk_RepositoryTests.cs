@@ -7,39 +7,36 @@ using SQLiteAbstractCrud.Proxy.Attributes;
 
 namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
 {
-    public class Test1Field_StrPk_RepositoryTests
+    public class StrPk_RepositoryTests
     {
-        private string _pathFileDb;
+        private readonly string _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
 
         [SetUp]
-        public void Init()
+        public void SetUp()
         {
-            _pathFileDb = $"{Directory.GetCurrentDirectory()}/mydb.db";
-            var repo = new Test1Field_StrPk_Repository(_pathFileDb);
-            repo.DropTable();
+            new StrPk_Repository(_pathFileDb).DropTable();
         }
 
         [TearDown]
-        public void Setup()
+        public void TearDown()
         {
-            var repo = new Test1Field_StrPk_Repository(_pathFileDb);
-            repo.DropTable();
+            new StrPk_Repository(_pathFileDb).DropTable();
         }
 
         [Test]
         public void MustGet()
         {
             // arrange
-            const string field1 = "fooValue";
-            var sut = new Test1Field_StrPk_Repository(_pathFileDb);
-            sut.Insert(new Test1Field_StrPk(field1));
+            const string stringFieldValue = "value";
+            var sut = new StrPk_Repository(_pathFileDb);
+            sut.Insert(new StrPk(stringFieldValue));
 
             // act
-            var result = sut.Get(field1);
+            var actual = sut.Get(stringFieldValue);
 
             // assert
-            Assert.NotNull(result);
-            Assert.AreEqual(field1, result.StringField);
+            Assert.NotNull(actual);
+            Assert.AreEqual(stringFieldValue, actual.StringField);
         }
 
         [Test]
@@ -47,8 +44,8 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
         {
             // arrange
             const string field1 = "fooValue";
-            var entity = new Test1Field_StrPk(field1);
-            var sut = new Test1Field_StrPk_Repository(_pathFileDb);
+            var entity = new StrPk(field1);
+            var sut = new StrPk_Repository(_pathFileDb);
 
             // act
             sut.Insert(entity);
@@ -64,8 +61,8 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
         {
             // arrange
             var stringField = "valueString";
-            var entity = new Test1Field_StrPk(stringField);
-            var sut = new Test1Field_StrPk_Repository(_pathFileDb);
+            var entity = new StrPk(stringField);
+            var sut = new StrPk_Repository(_pathFileDb);
             sut.Insert(entity);
             var newValueStringField = "newValue";
 
@@ -84,9 +81,9 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
         public void MustGetAll()
         {
             // arrange
-            var entity1 = new Test1Field_StrPk("fooValue1");
-            var entity2 = new Test1Field_StrPk("fooValue2");
-            var sut = new Test1Field_StrPk_Repository(_pathFileDb);
+            var entity1 = new StrPk("fooValue1");
+            var entity2 = new StrPk("fooValue2");
+            var sut = new StrPk_Repository(_pathFileDb);
             sut.Insert(entity1);
             sut.Insert(entity2);
 
@@ -107,14 +104,14 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
             var value1 = "fooValue1";
             var value2 = "fooValue2";
             var value3 = "fooValue3";
-            var entity1 = new Test1Field_StrPk(value1);
-            var entity2 = new Test1Field_StrPk(value2);
-            var entity3 = new Test1Field_StrPk(value3);
+            var entity1 = new StrPk(value1);
+            var entity2 = new StrPk(value2);
+            var entity3 = new StrPk(value3);
 
-            var sut = new Test1Field_StrPk_Repository(_pathFileDb);
+            var sut = new StrPk_Repository(_pathFileDb);
 
             // act
-            sut.InsertBatch(new List<Test1Field_StrPk> { entity1, entity2, entity3 });
+            sut.InsertBatch(new List<StrPk> { entity1, entity2, entity3 });
 
             // assert
             var insertedEntity1 = sut.Get(value1);
@@ -129,21 +126,21 @@ namespace SQLiteAbstractCrud.Tests.SimplePrimaryKey.NumFields01
         }
     }
 
-    public class Test1Field_StrPk_Repository : RepositoryBase<Test1Field_StrPk>
+    public class StrPk_Repository : RepositoryBase<StrPk>
     {
-        public Test1Field_StrPk_Repository(string pathDbFile) : base(pathDbFile)
+        public StrPk_Repository(string pathDbFile) : base(pathDbFile)
         {
         }
     }
 
-    public class Test1Field_StrPk
+    public class StrPk
     {
         [PrimaryKey]
         public string StringField { get; }
 
-        public Test1Field_StrPk(string field1)
+        public StrPk(string stringField)
         {
-            StringField = field1;
+            StringField = stringField;
         }
     }
 }

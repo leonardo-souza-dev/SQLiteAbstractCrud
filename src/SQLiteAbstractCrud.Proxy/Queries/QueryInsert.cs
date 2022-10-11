@@ -15,7 +15,8 @@ namespace SQLiteAbstractCrud.Proxy.Queries
             var queryValuesAdjust = GetValuesCommas(_proxyBase.Fields);
 
             var query = $"INSERT OR REPLACE INTO {this.TableName} " +
-                        $"({GetFieldsCommasFields(_proxyBase.Fields.Items.Where(x => !x.IsAutoincrement).ToList())}) " +
+                        //$"({GetFieldsCommasFields(_proxyBase.Fields.Items.Where(x => !x.IsAutoincrement).ToList())}) " +
+                        $"({GetFieldsCommasFields(_proxyBase.GetFieldsNotAutoIncrement())}) " +
                         $"VALUES ({queryValuesAdjust});";
 
             return query;

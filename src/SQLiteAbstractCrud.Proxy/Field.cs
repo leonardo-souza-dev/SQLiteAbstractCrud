@@ -6,7 +6,7 @@ namespace SQLiteAbstractCrud.Proxy
     {
         public string NameOnDb { get; private set; }
         internal string TypeCSharp { get; set; }
-        public string TypeSQLite { get; private set; }
+        public string SQLiteType { get; private set; }
         public string Quote { get; private set; }
         public bool IsPrimaryKey { get; }
         public bool IsAutoincrement { get; }
@@ -33,13 +33,13 @@ namespace SQLiteAbstractCrud.Proxy
             {
                 case "String":
                 case "DateTime":
-                    TypeSQLite = "TEXT";
+                    SQLiteType = "TEXT";
                     Quote = "'";
                     break; 
                 case "Int32": 
                 case "Int16":
                 case "Boolean":
-                    TypeSQLite = "INTEGER";
+                    SQLiteType = "INTEGER";
                     Quote = "";
                     break;
                 default:

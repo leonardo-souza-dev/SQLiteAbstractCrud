@@ -4,11 +4,11 @@ namespace Util
 {
     public static class Extensions
     {
-        public static string GetValue(this object valor)
+        public static string GetValue(this object value)
         {
-            Type type = valor.GetType();
+            Type type = value.GetType();
 
-            if (type == typeof(DateTime) && DateTime.TryParse(valor.ToString(), out DateTime dateValue))
+            if (type == typeof(DateTime) && DateTime.TryParse(value.ToString(), out DateTime dateValue))
             {
                 var month = dateValue.Month.ToString().PadLeft(2, '0');
                 var day = dateValue.Day.ToString().PadLeft(2, '0');
@@ -20,7 +20,7 @@ namespace Util
                 return $"{dateValue.Year}-{month}-{day} {hour}:{minute}:{second}.{milisecond}";
             }
 
-            return valor.ToString();
+            return value.ToString();
         }
     }
 }

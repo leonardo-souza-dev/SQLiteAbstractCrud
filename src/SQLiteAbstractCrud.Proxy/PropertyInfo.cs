@@ -9,7 +9,9 @@ namespace SQLiteAbstractCrud.Proxy
         public int OriginalOrder { get; }
         private PropertyInfo _propertyInfo;
         public string OriginalName => _propertyInfo.Name;
+
         public string CSharpType => _propertyInfo.PropertyType.Name;
+
         public bool IsPrimaryKey
         {
             get
@@ -28,11 +30,16 @@ namespace SQLiteAbstractCrud.Proxy
         }
         public int ProxyOrder { get; }
 
-        public ProxyPropertyInfo(int originalOrder, PropertyInfo propertyInfo, int proxyOrder)
+        //public ProxyPropertyInfo(int originalOrder, PropertyInfo propertyInfo, int proxyOrder)
+        //{
+        //    this.OriginalOrder = originalOrder;
+        //    this._propertyInfo = propertyInfo;
+        //    this.ProxyOrder = proxyOrder;
+        //}
+
+        public ProxyPropertyInfo(PropertyInfo propertyInfo)
         {
-            this.OriginalOrder = originalOrder;
             this._propertyInfo = propertyInfo;
-            this.ProxyOrder = proxyOrder;
         }
     }    
 }
